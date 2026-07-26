@@ -968,7 +968,7 @@
         }
     </style>
 </head>
-<body>
+<>
 
     <div class="container">
         <!-- Шапка -->
@@ -1344,6 +1344,99 @@
             loadPage('home');
         });
     </script>
+    <script>
+// Подключение к API на DockerHosting
+const API_URL = 'http://185.135.80.119:8080/api';
+
+// Загрузка тарифов
+async function loadTariffs() {
+    try {
+        const response = await fetch(`${API_URL}/tariffs`);
+        const tariffs = await response.json();
+        // Обновляем карточки тарифов на странице
+        const cards = document.querySelectorAll('.card');
+        tariffs.forEach((tariff, index) => {
+            if (cards[index]) {
+                cards[index].querySelector('h3').textContent = tariff.name;
+                cards[index].querySelector('.price').innerHTML = `${tariff.price} р <small>/ сайт</small>`;
+                cards[index].querySelector('p').textContent = tariff.description;
+            }
+        });
+    } catch (error) {
+        console.error('Ошибка загрузки тарифов:', error);
+    }
+}
+
+// Загрузка FAQ
+async function loadFaq() {
+    try {
+        const response = await fetch(`${API_URL}/faq`);
+        const faqItems = await response.json();
+        // Обновляем блок FAQ
+        const faqGrid = document.querySelector('.faq-grid');
+        if (faqGrid) {
+            // Очищаем старые вопросы
+            const blocks = faqGrid.querySelectorAll('.faq-block');
+            // Обновляем первые блоки с вопросами
+            faqItems.slice(0, 4).forEach((item, index) => {
+                if (blocks[index]) {
+                    const ul = blocks[index].querySelector('ul');
+                    if (ul) {
+                        ul.innerHTML = `<li>${item.question}</li>`;
+                    }
+                }
+            });
+        }
+    } catch (error) {
+        console.error('Ошибка загрузки FAQ:', error);
+    }
+}
+
+// Отправка заявки
+async function sendLead(name, phone, tariff) {
+    try {
+        const response = await fetch(`${API_URL}/leads`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ name, phone, tariff })
+        });
+        const result = await response.json();
+        return result;
+    } catch (error) {
+        console.error('Ошибка отправки заявки:', error);
+        return { error: 'Ошибка отправки' };
+    }
+}
+
+// Заменить обработчик отправки формы
+document.addEventListener('DOMContentLoaded', function() {
+    // Загружаем данные
+    loadTariffs();
+    loadFaq();
+    
+    // Перехватываем отправку формы
+    const form = document.getElementById('orderForm');
+    if (form) {
+        form.addEventListener('submit', async function(e) {
+            e.preventDefault();
+            const name = document.getElementById('userName').value;
+            const phone = document.getElementById('userPhone').value;
+            const tariff = document.getElementById('hiddenTariff').value || 'Не указан';
+            
+            const result = await sendLead(name, phone, tariff);
+            if (result.success) {
+                // Показываем уведомление
+                document.getElementById('heartNotification').classList.add('show');
+                form.reset();
+            } else {
+                alert('Ошибка отправки. Попробуйте позже.');
+            }
+        });
+    }
+});
+</script>
 
 </body>
 </html>
