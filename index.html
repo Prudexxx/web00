@@ -1066,7 +1066,7 @@
         // ========== ДАННЫЕ ТАРИФОВ ==========
         const tariffData = {
             'Лендинг': {
-                price: 'от 25.000',
+                price: ' 25.000',
                 services: [
                     'Дизайн макета (уникальный)',
                     'Брендинг + логотип',
@@ -1076,18 +1076,19 @@
                 ]
             },
             'Старт': {
-                price: 'от 50.000',
+                price: ' 50.000',
                 services: [
                     'Дизайн + прототип',
                     'Адаптив под все устройства',
                     'Настройка SEO-базы',
                     'Подключение аналитики',
                     'Техническая поддержка 1 месяц',
-                    'Форма обратной связи'
+                    'Форма обратной связи',
+                    'CSM (создавать, редактировать и управлять содержимым сайтa)'
                 ]
             },
             'Бизнес': {
-                price: 'от 250.000',
+                price: ' 350.000',
                 services: [
                     'Интернет-магазин / корзина',
                     'CRM-интеграция (AmoCRM, Bitrix)',
@@ -1214,7 +1215,7 @@
               <i class="fas fa-rocket"></i>
               <h3>Бизнес</h3>
               <p>Мощный функционал, корзина, CRM-интеграция.</p>
-              <div class="price">от 250.000 р <small>/ сайт</small></div>
+              <div class="price">от 350.000 р <small>/ сайт</small></div>
               <div class="btn-center">
                 <button class="btn-universal" onclick="openModal('Бизнес')"><i class="fas fa-shopping-cart"></i> Подробнее</button>
               </div>
@@ -1332,179 +1333,189 @@
         });
     </script>
 
-    <script>
-// ========== ПОДКЛЮЧЕНИЕ К API ==========
-const API_URL = 'http://185.135.80.119:8081/api';
+<script>// ========== API КОНФИГ ==========
+const API_URL = 'http://185.135.80.119:5000/api';
 
-// ========== ЗАГРУЗКА ТАРИФОВ ==========
-async function loadTariffs() {
+// ========== ЗАГРУЗКА ДАННЫХ С БЭКЕНДА ==========
+async function loadData() {
     try {
-        const response = await fetch(`${API_URL}/tariffs.php`);
-        const tariffs = await response.json();
+        // Загружаем настройки
+        const settingsRes = await fetch(`${API_URL}/settings`);
+        const settings = await settingsRes.json();
         
-        // Обновляем карточки тарифов
-        const cards = document.querySelectorAll('.card');
-        tariffs.forEach((tariff, index) => {
-            if (cards[index]) {
-                // Обновляем название
-                const titleEl = cards[index].querySelector('h3');
-                if (titleEl) titleEl.textContent = tariff.name;
-                
-                // Обновляем цену
-                const priceEl = cards[index].querySelector('.price');
-                if (priceEl) priceEl.innerHTML = `${tariff.price} р <small>/ сайт</small>`;
-                
-                // Обновляем описание
-                const descEl = cards[index].querySelector('p');
-                if (descEl) descEl.textContent = tariff.description;
-            }
-        });
-    } catch (error) {
-        console.error('Ошибка загрузки тарифов:', error);
-    }
-}
-
-// ========== ЗАГРУЗКА FAQ ==========
-async function loadFaq() {
-    try {
-        const response = await fetch(`${API_URL}/faq.php`);
-        const faqItems = await response.json();
-        
-        // Обновляем блок FAQ
-        const faqGrid = document.querySelector('.faq-grid');
-        if (faqGrid) {
-            // Находим блоки с вопросами
-            const blocks = faqGrid.querySelectorAll('.faq-block');
-            faqItems.slice(0, 4).forEach((item, index) => {
-                if (blocks[index]) {
-                    const ul = blocks[index].querySelector('ul');
-                    if (ul) {
-                        // Очищаем и добавляем новые вопросы
-                        ul.innerHTML = `<li>${item.question}</li>`;
-                    }
-                }
-            });
+        // Применяем настройки
+        if (settings.siteTitle) {
+            document.querySelector('.logo').textContent = settings.siteTitle;
+            document.title = settings.siteTitle;
         }
-    } catch (error) {
-        console.error('Ошибка загрузки FAQ:', error);
-    }
-}
-
-// ========== ЗАГРУЗКА БЛОГА ==========
-async function loadBlog() {
-    try {
-        const response = await fetch(`${API_URL}/blog.php`);
-        const posts = await response.json();
         
-        const grid = document.querySelector('.page-template .card-grid');
-        if (grid) {
-            grid.innerHTML = '';
-            posts.forEach(post => {
-                const card = document.createElement('div');
-                card.className = 'mini-card';
-                card.innerHTML = `
-                    <h4>${post.title}</h4>
-                    <p>${post.content}</p>
-                    <div class="meta">${post.meta}</div>
-                `;
-                grid.appendChild(card);
-            });
-        }
-    } catch (error) {
-        console.error('Ошибка загрузки блога:', error);
-    }
-}
-
-// ========== ЗАГРУЗКА ПОРТФОЛИО ==========
-async function loadPortfolio() {
-    try {
-        const response = await fetch(`${API_URL}/portfolio.php`);
-        const items = await response.json();
+        // Загружаем тарифы
+        const tariffsRes = await fetch(`${API_URL}/tariffs`);
+        const tariffs = await tariffsRes.json();
         
-        const grid = document.querySelector('.page-template .card-grid');
-        if (grid) {
-            grid.innerHTML = '';
-            items.forEach(item => {
-                const card = document.createElement('div');
-                card.className = 'mini-card';
-                card.innerHTML = `
-                    <h4>${item.title}</h4>
-                    <p>${item.description}</p>
-                    <div class="meta">${item.meta}</div>
-                `;
-                grid.appendChild(card);
-            });
-        }
+        // Загружаем FAQ
+        const faqRes = await fetch(`${API_URL}/faq`);
+        const faqs = await faqRes.json();
+        
+        // Загружаем портфолио
+        const portfolioRes = await fetch(`${API_URL}/portfolio`);
+        const portfolio = await portfolioRes.json();
+        
+        // Загружаем блог
+        const blogRes = await fetch(`${API_URL}/blog`);
+        const blog = await blogRes.json();
+        
+        // Обновляем страницы
+        updateHomePage(tariffs);
+        updateFaqPage(faqs);
+        updatePortfolioPage(portfolio);
+        updateBlogPage(blog);
+        
     } catch (error) {
-        console.error('Ошибка загрузки портфолио:', error);
+        console.log('Ошибка загрузки данных:', error);
     }
 }
 
-// ========== ОТПРАВКА ЗАЯВКИ ==========
-async function sendLead(name, phone, tariff) {
-    try {
-        const response = await fetch(`${API_URL}/leads.php`, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({ name, phone, tariff })
-        });
-        return await response.json();
-    } catch (error) {
-        console.error('Ошибка отправки:', error);
-        return { error: 'Ошибка отправки' };
-    }
-}
-
-// ========== ЗАПУСК ПРИ ЗАГРУЗКЕ СТРАНИЦЫ ==========
-document.addEventListener('DOMContentLoaded', function() {
-    // Определяем, какая страница загружена
-    const path = window.location.pathname;
+// ========== ОБНОВЛЕНИЕ ГЛАВНОЙ ==========
+function updateHomePage(tariffs) {
+    const grid = document.querySelector('.grid-3');
+    if (!grid || tariffs.length === 0) return;
     
-    if (path.includes('blog') || document.querySelector('.page-template h2')?.textContent.includes('Блог')) {
-        loadBlog();
-    } else if (path.includes('portfolio') || document.querySelector('.page-template h2')?.textContent.includes('Портфолио')) {
-        loadPortfolio();
-    } else {
-        // Главная страница
-        loadTariffs();
-        loadFaq();
+    const tariffColors = ['', '', 'border:2px solid rgba(167,139,250,0.3);'];
+    const tariffIcons = ['fa-infinity', 'fa-crown', 'fa-rocket'];
+    
+    grid.innerHTML = tariffs.map((tariff, index) => `
+        <div class="card" style="${tariffColors[index % tariffColors.length]}">
+            <i class="fas ${tariffIcons[index % tariffIcons.length]}"></i>
+            <h3>${tariff.name}</h3>
+            <p>${tariff.services.slice(0, 3).join(', ')}...</p>
+            <div class="price">${tariff.price} р <small>/ сайт</small></div>
+            <div class="btn-center">
+                <button class="btn-universal" onclick="openModal('${tariff.name}')">
+                    <i class="fas fa-shopping-cart"></i> Подробнее
+                </button>
+            </div>
+        </div>
+    `).join('');
+}
+
+// ========== ОБНОВЛЕНИЕ FAQ ==========
+function updateFaqPage(faqs) {
+    const faqGrid = document.querySelector('.faq-grid');
+    if (!faqGrid) return;
+    
+    // Обновляем основные блоки FAQ
+    const blocks = faqGrid.querySelectorAll('.faq-block');
+    if (blocks.length >= 4) {
+        // Первый блок - популярные вопросы
+        const popularQuestions = faqs.slice(0, 5).map(f => `<li>${f.question}</li>`).join('');
+        blocks[0].querySelector('ul').innerHTML = popularQuestions || '<li>Вопросы скоро появятся</li>';
+        
+        // Второй блок - ответы
+        if (faqs.length > 0) {
+            const firstFaq = faqs[0];
+            blocks[1].innerHTML = `
+                <h3><i class="fas fa-circle"></i> ${firstFaq.question}</h3>
+                <p>${firstFaq.answer}</p>
+            `;
+        }
     }
     
-    // Перехват отправки формы заявки
-    const form = document.getElementById('orderForm');
-    if (form) {
-        form.addEventListener('submit', async function(e) {
-            e.preventDefault();
-            const name = document.getElementById('userName').value;
-            const phone = document.getElementById('userPhone').value;
-            const tariff = document.getElementById('hiddenTariff').value || 'Не указан';
-            
-            const result = await sendLead(name, phone, tariff);
-            if (result.success) {
-                document.getElementById('heartNotification').classList.add('show');
-                form.reset();
-            } else {
-                alert('Ошибка отправки. Попробуйте позже.');
-            }
-        });
+    // Обновляем список всех вопросов
+    const questionsGrid = document.querySelector('.faq-questions-grid');
+    if (questionsGrid && faqs.length > 0) {
+        questionsGrid.innerHTML = faqs.map((faq, index) => `
+            <div class="faq-question-wrapper">
+                <button class="faq-question-btn" id="btn-faq-${index}" onclick="toggleAnswer('faq-${index}')">
+                    <i class="fas fa-chevron-right"></i>
+                    <span class="btn-text">${index+1}. ${faq.question}</span>
+                </button>
+                <div class="faq-answer" id="answer-faq-${index}">
+                    <strong>${faq.question}</strong><br>
+                    ${faq.answer}
+                </div>
+            </div>
+        `).join('');
     }
+}
+
+// ========== ОБНОВЛЕНИЕ ПОРТФОЛИО ==========
+function updatePortfolioPage(items) {
+    const grid = document.querySelector('.page-template .card-grid');
+    if (!grid) return;
+    
+    grid.innerHTML = items.map(item => `
+        <div class="mini-card">
+            ${item.image ? `<img src="${item.image}" style="width:100%; border-radius:12px; margin-bottom:10px;">` : ''}
+            <h4>${item.title}</h4>
+            <p>${item.description}</p>
+            <div class="meta">${item.meta || ''}</div>
+        </div>
+    `).join('');
+}
+
+// ========== ОБНОВЛЕНИЕ БЛОГА ==========
+function updateBlogPage(posts) {
+    const grid = document.querySelector('.page-template .card-grid');
+    if (!grid) return;
+    
+    // Для блога используем другой селектор, если портфолио тоже использует card-grid
+    // Можно добавить отдельный контейнер для блога
+    const blogGrid = document.querySelector('.blog-grid') || grid;
+    blogGrid.innerHTML = posts.map(post => `
+        <div class="mini-card">
+            <h4>${post.title}</h4>
+            <p>${post.content}</p>
+            <div class="meta">${post.meta || ''} · ${new Date(post.date).toLocaleDateString()}</div>
+        </div>
+    `).join('');
+}
+
+// ========== ДАННЫЕ ТАРИФОВ (для модалки) ==========
+// Загружаем тарифы для модалки
+async function loadTariffsForModal() {
+    try {
+        const res = await fetch(`${API_URL}/tariffs`);
+        const tariffs = await res.json();
+        window.tariffData = {};
+        tariffs.forEach(t => {
+            window.tariffData[t.name] = {
+                price: t.price,
+                services: t.services
+            };
+        });
+    } catch (error) {
+        console.log('Ошибка загрузки тарифов:', error);
+    }
+}
+
+// ========== ЗАГРУЗКА ПРИ СТАРТЕ ==========
+document.addEventListener('DOMContentLoaded', async () => {
+    await loadTariffsForModal();
+    await loadData();
+    loadPage('home');
 });
 
-// Функция для обновления данных при переключении страниц (если используется SPA)
-if (typeof loadPage === 'function') {
-    const originalLoadPage = loadPage;
-    loadPage = function(page) {
-        originalLoadPage(page);
-        setTimeout(() => {
-            if (page === 'blog') loadBlog();
-            else if (page === 'portfolio') loadPortfolio();
-            else if (page === 'home') { loadTariffs(); loadFaq(); }
-        }, 100);
-    };
-}
-</script>
-
+// Обновляем функцию openModal для работы с динамическими данными
+const originalOpenModal = window.openModal;
+window.openModal = function(tariffKey) {
+    const data = window.tariffData?.[tariffKey];
+    if (!data) {
+        alert('Тариф не найден');
+        return;
+    }
+    
+    document.getElementById('modalTariffName').textContent = tariffKey;
+    document.getElementById('modalPriceDisplay').innerHTML = `${data.price} р <small>/ сайт</small>`;
+    document.getElementById('hiddenTariff').value = tariffKey;
+    
+    const serviceList = document.getElementById('serviceList');
+    serviceList.innerHTML = data.services.map(service => `
+        <li><i class="fas fa-check-circle"></i> ${service}</li>
+    `).join('');
+    
+    document.getElementById('tariffModal').classList.add('active');
+    document.body.style.overflow = 'hidden';
+};</script>
 </body>
 </html>
