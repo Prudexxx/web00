@@ -1084,7 +1084,7 @@
                     'Подключение аналитики',
                     'Техническая поддержка 1 месяц',
                     'Форма обратной связи',
-                    'CSM (создавать, редактировать и управлять содержимым сайтa)'
+                    'CSM (редактировать и управлять содержимым сайтa)'
                 ]
             },
             'Бизнес': {
@@ -1235,11 +1235,12 @@
             <h2><i class="fas fa-question-circle" style="background: none; -webkit-text-fill-color: #a78bfa; color: #a78bfa;"></i> FAQ</h2>
             <div class="subhead">Ответы на вопросы перед запуском сайта: цена, демо, сроки, заявка, правки, поддержка и передача обращений в удобный канал.</div>
             <div style="display: flex; flex-wrap: wrap; gap: 10px; margin-bottom: 28px; justify-content: center; width:100%;">
-              <span style="background: rgba(167,139,250,0.12); padding: 6px 16px; border-radius: 60px; font-size: 0.85rem; border: 1px solid rgba(167,139,250,0.1); white-space:nowrap;"><i class="fas fa-eye" style="color: #6ee7b7;"></i> Демо до оплаты</span>
+          
               <span style="background: rgba(167,139,250,0.12); padding: 6px 16px; border-radius: 60px; font-size: 0.85rem; border: 1px solid rgba(167,139,250,0.1); white-space:nowrap;"><i class="fas fa-hand-holding-heart" style="color: #6ee7b7;"></i> Без предоплаты</span>
+                  <span style="background: rgba(167,139,250,0.12); padding: 6px 16px; border-radius: 60px; font-size: 0.85rem; border: 1px solid rgba(167,139,250,0.1); white-space:nowrap;"><i class="fas fa-eye" style="color: #6ee7b7;"></i> Демо до оплаты</span>
               <span style="background: rgba(167,139,250,0.12); padding: 6px 16px; border-radius: 60px; font-size: 0.85rem; border: 1px solid rgba(167,139,250,0.1); white-space:nowrap;"><i class="fas fa-clock" style="color: #6ee7b7;"></i> Запуск от 2 дней</span>
-              <span style="background: rgba(167,139,250,0.12); padding: 6px 16px; border-radius: 60px; font-size: 0.85rem; border: 1px solid rgba(167,139,250,0.1); white-space:nowrap;"><i class="fas fa-telegram" style="color: #6ee7b7;"></i> Заявки в Telegram</span>
-              <span style="background: rgba(167,139,250,0.12); padding: 6px 16px; border-radius: 60px; font-size: 0.85rem; border: 1px solid rgba(167,139,250,0.1); white-space:nowrap;"><i class="fas fa-headset" style="color: #6ee7b7;"></i> Поддержка 24/7</span>
+              <span style="background: rgba(167,139,250,0.12); padding: 6px 16px; border-radius: 60px; font-size: 0.85rem; border: 1px solid rgba(167,139,250,0.1); white-space:nowrap;"><i class="fas fa-telegram" style="color: #6ee7b7;"></i> Заявки в Telegram, почту, googl таблицу</span>
+              <span style="background: rgba(167,139,250,0.12); padding: 6px 16px; border-radius: 60px; font-size: 0.85rem; border: 1px solid rgba(167,139,250,0.1); white-space:nowrap;"><i class="fas fa-headset" style="color: #6ee7b7;"></i> Техподдержка </span>
             </div>
             <div class="faq-grid">
               <div class="faq-block"><h3><i class="fas fa-circle"></i> ПЕРЕД ЗАЯВКОЙ ЧАЩЕ ВСЕГО УТОЧНЯЮТ</h3><ul><li>Можно ли начать без предоплаты?</li><li>Когда я увижу демо?</li><li>Сколько будет стоить запуск?</li><li>Куда будут приходить заявки?</li></ul></div>
@@ -1333,189 +1334,7 @@
         });
     </script>
 
-<script>// ========== API КОНФИГ ==========
-const API_URL = 'http://185.135.80.119:5000/api';
+    
 
-// ========== ЗАГРУЗКА ДАННЫХ С БЭКЕНДА ==========
-async function loadData() {
-    try {
-        // Загружаем настройки
-        const settingsRes = await fetch(`${API_URL}/settings`);
-        const settings = await settingsRes.json();
-        
-        // Применяем настройки
-        if (settings.siteTitle) {
-            document.querySelector('.logo').textContent = settings.siteTitle;
-            document.title = settings.siteTitle;
-        }
-        
-        // Загружаем тарифы
-        const tariffsRes = await fetch(`${API_URL}/tariffs`);
-        const tariffs = await tariffsRes.json();
-        
-        // Загружаем FAQ
-        const faqRes = await fetch(`${API_URL}/faq`);
-        const faqs = await faqRes.json();
-        
-        // Загружаем портфолио
-        const portfolioRes = await fetch(`${API_URL}/portfolio`);
-        const portfolio = await portfolioRes.json();
-        
-        // Загружаем блог
-        const blogRes = await fetch(`${API_URL}/blog`);
-        const blog = await blogRes.json();
-        
-        // Обновляем страницы
-        updateHomePage(tariffs);
-        updateFaqPage(faqs);
-        updatePortfolioPage(portfolio);
-        updateBlogPage(blog);
-        
-    } catch (error) {
-        console.log('Ошибка загрузки данных:', error);
-    }
-}
-
-// ========== ОБНОВЛЕНИЕ ГЛАВНОЙ ==========
-function updateHomePage(tariffs) {
-    const grid = document.querySelector('.grid-3');
-    if (!grid || tariffs.length === 0) return;
-    
-    const tariffColors = ['', '', 'border:2px solid rgba(167,139,250,0.3);'];
-    const tariffIcons = ['fa-infinity', 'fa-crown', 'fa-rocket'];
-    
-    grid.innerHTML = tariffs.map((tariff, index) => `
-        <div class="card" style="${tariffColors[index % tariffColors.length]}">
-            <i class="fas ${tariffIcons[index % tariffIcons.length]}"></i>
-            <h3>${tariff.name}</h3>
-            <p>${tariff.services.slice(0, 3).join(', ')}...</p>
-            <div class="price">${tariff.price} р <small>/ сайт</small></div>
-            <div class="btn-center">
-                <button class="btn-universal" onclick="openModal('${tariff.name}')">
-                    <i class="fas fa-shopping-cart"></i> Подробнее
-                </button>
-            </div>
-        </div>
-    `).join('');
-}
-
-// ========== ОБНОВЛЕНИЕ FAQ ==========
-function updateFaqPage(faqs) {
-    const faqGrid = document.querySelector('.faq-grid');
-    if (!faqGrid) return;
-    
-    // Обновляем основные блоки FAQ
-    const blocks = faqGrid.querySelectorAll('.faq-block');
-    if (blocks.length >= 4) {
-        // Первый блок - популярные вопросы
-        const popularQuestions = faqs.slice(0, 5).map(f => `<li>${f.question}</li>`).join('');
-        blocks[0].querySelector('ul').innerHTML = popularQuestions || '<li>Вопросы скоро появятся</li>';
-        
-        // Второй блок - ответы
-        if (faqs.length > 0) {
-            const firstFaq = faqs[0];
-            blocks[1].innerHTML = `
-                <h3><i class="fas fa-circle"></i> ${firstFaq.question}</h3>
-                <p>${firstFaq.answer}</p>
-            `;
-        }
-    }
-    
-    // Обновляем список всех вопросов
-    const questionsGrid = document.querySelector('.faq-questions-grid');
-    if (questionsGrid && faqs.length > 0) {
-        questionsGrid.innerHTML = faqs.map((faq, index) => `
-            <div class="faq-question-wrapper">
-                <button class="faq-question-btn" id="btn-faq-${index}" onclick="toggleAnswer('faq-${index}')">
-                    <i class="fas fa-chevron-right"></i>
-                    <span class="btn-text">${index+1}. ${faq.question}</span>
-                </button>
-                <div class="faq-answer" id="answer-faq-${index}">
-                    <strong>${faq.question}</strong><br>
-                    ${faq.answer}
-                </div>
-            </div>
-        `).join('');
-    }
-}
-
-// ========== ОБНОВЛЕНИЕ ПОРТФОЛИО ==========
-function updatePortfolioPage(items) {
-    const grid = document.querySelector('.page-template .card-grid');
-    if (!grid) return;
-    
-    grid.innerHTML = items.map(item => `
-        <div class="mini-card">
-            ${item.image ? `<img src="${item.image}" style="width:100%; border-radius:12px; margin-bottom:10px;">` : ''}
-            <h4>${item.title}</h4>
-            <p>${item.description}</p>
-            <div class="meta">${item.meta || ''}</div>
-        </div>
-    `).join('');
-}
-
-// ========== ОБНОВЛЕНИЕ БЛОГА ==========
-function updateBlogPage(posts) {
-    const grid = document.querySelector('.page-template .card-grid');
-    if (!grid) return;
-    
-    // Для блога используем другой селектор, если портфолио тоже использует card-grid
-    // Можно добавить отдельный контейнер для блога
-    const blogGrid = document.querySelector('.blog-grid') || grid;
-    blogGrid.innerHTML = posts.map(post => `
-        <div class="mini-card">
-            <h4>${post.title}</h4>
-            <p>${post.content}</p>
-            <div class="meta">${post.meta || ''} · ${new Date(post.date).toLocaleDateString()}</div>
-        </div>
-    `).join('');
-}
-
-// ========== ДАННЫЕ ТАРИФОВ (для модалки) ==========
-// Загружаем тарифы для модалки
-async function loadTariffsForModal() {
-    try {
-        const res = await fetch(`${API_URL}/tariffs`);
-        const tariffs = await res.json();
-        window.tariffData = {};
-        tariffs.forEach(t => {
-            window.tariffData[t.name] = {
-                price: t.price,
-                services: t.services
-            };
-        });
-    } catch (error) {
-        console.log('Ошибка загрузки тарифов:', error);
-    }
-}
-
-// ========== ЗАГРУЗКА ПРИ СТАРТЕ ==========
-document.addEventListener('DOMContentLoaded', async () => {
-    await loadTariffsForModal();
-    await loadData();
-    loadPage('home');
-});
-
-// Обновляем функцию openModal для работы с динамическими данными
-const originalOpenModal = window.openModal;
-window.openModal = function(tariffKey) {
-    const data = window.tariffData?.[tariffKey];
-    if (!data) {
-        alert('Тариф не найден');
-        return;
-    }
-    
-    document.getElementById('modalTariffName').textContent = tariffKey;
-    document.getElementById('modalPriceDisplay').innerHTML = `${data.price} р <small>/ сайт</small>`;
-    document.getElementById('hiddenTariff').value = tariffKey;
-    
-    const serviceList = document.getElementById('serviceList');
-    serviceList.innerHTML = data.services.map(service => `
-        <li><i class="fas fa-check-circle"></i> ${service}</li>
-    `).join('');
-    
-    document.getElementById('tariffModal').classList.add('active');
-    document.body.style.overflow = 'hidden';
-};</script>
 </body>
 </html>
