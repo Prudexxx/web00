@@ -1334,10 +1334,9 @@
         });
     </script>
 
- <script>
+<script>
     // ===== АДРЕС ВАШЕГО БЭКЕНДА =====
-    
-     const API_BASE = 'http://185.135.80.119:3000/api';
+    const API_BASE = 'http://185.135.80.119:3000/api';
 
     // ===== ЗАГРУЗКА ТАРИФОВ =====
     async function loadTariffs() {
@@ -1349,7 +1348,11 @@
             const grid = document.querySelector('.grid-3');
             if (!grid) return;
             
-            // Генерируем карточки тарифов из данных API
+            if (tariffs.length === 0) {
+                grid.innerHTML = '<p style="color: #94a3b8; text-align: center; width: 100%;">Нет тарифов. Добавьте их в админке.</p>';
+                return;
+            }
+
             grid.innerHTML = tariffs.map(t => `
                 <div class="card">
                     <i class="fas fa-infinity"></i>
@@ -1374,6 +1377,8 @@
             });
         } catch (err) {
             console.error('Ошибка загрузки тарифов:', err);
+            const grid = document.querySelector('.grid-3');
+            if (grid) grid.innerHTML = '<p style="color: #ff6b6b; text-align: center; width: 100%;">Не удалось загрузить тарифы. Проверьте подключение к бэкенду.</p>';
         }
     }
 
@@ -1384,15 +1389,17 @@
             if (!res.ok) throw new Error('Ошибка загрузки карточек');
             const cards = await res.json();
             
-            // Определяем тип карточек (портфолио или блог)
             const type = page === 'portfolio' ? 'portfolio' : 'blog';
             const filtered = cards.filter(c => c.type === type);
             
-            // Находим контейнер для карточек на странице
             const container = document.querySelector('#main-content .card-grid');
             if (!container) return;
             
-            // Генерируем карточки
+            if (filtered.length === 0) {
+                container.innerHTML = '<p style="color: #94a3b8; text-align: center; width: 100%;">Нет карточек. Добавьте их в админке.</p>';
+                return;
+            }
+
             container.innerHTML = filtered.map(c => `
                 <div class="mini-card">
                     <h4>${c.title}</h4>
@@ -1402,16 +1409,17 @@
             `).join('');
         } catch (err) {
             console.error('Ошибка загрузки карточек:', err);
+            const container = document.querySelector('#main-content .card-grid');
+            if (container) container.innerHTML = '<p style="color: #ff6b6b; text-align: center; width: 100%;">Не удалось загрузить карточки. Проверьте подключение к бэкенду.</p>';
         }
     }
 
     // ===== ПЕРЕОПРЕДЕЛЯЕМ loadPage =====
     const originalLoadPage = loadPage;
     loadPage = function(page) {
-        // Вызываем оригинальную функцию для вставки HTML
         originalLoadPage(page);
         
-        // После вставки загружаем данные
+        // После вставки HTML загружаем данные
         if (page === 'home') {
             loadTariffs();
         } else if (page === 'portfolio' || page === 'blog') {
@@ -1419,11 +1427,16 @@
         }
     };
 
-    // ===== ПРИ ПЕРВОЙ ЗАГРУЗКЕ =====
+    // ===== ПРИ ПЕРВОЙ ЗАГРУЗКЕ СТРАНИЦЫ =====
     document.addEventListener('DOMContentLoaded', () => {
-        loadPage('home');
+        // Вызываем оригинальную loadPage('home') уже есть, но мы переопределили её,
+        // поэтому она сама подгрузит данные.
+        // Но если страница уже загружена, инициализируем загрузку данных.
+        if (document.querySelector('.grid-3')) {
+            loadTariffs();
+        }
     });
-</script>   
+</script>
 
 </body>
 </html>
