@@ -1334,7 +1334,95 @@
         });
     </script>
 
-    
+ <script>
+    // ===== АДРЕС ВАШЕГО БЭКЕНДА =====
+    const API_BASE = 'http://185.135.80.119:9300/api';
+
+    // ===== ЗАГРУЗКА ТАРИФОВ =====
+    async function loadTariffs() {
+        try {
+            const res = await fetch(API_BASE + '/tariffs');
+            if (!res.ok) throw new Error('Ошибка загрузки тарифов');
+            const tariffs = await res.json();
+            
+            const grid = document.querySelector('.grid-3');
+            if (!grid) return;
+            
+            // Генерируем карточки тарифов из данных API
+            grid.innerHTML = tariffs.map(t => `
+                <div class="card">
+                    <i class="fas fa-infinity"></i>
+                    <h3>${t.name}</h3>
+                    <p>${t.description || 'Полный цикл разработки'}</p>
+                    <div class="price">от ${t.price} р<small>/ сайт</small></div>
+                    <div class="btn-center">
+                        <button class="btn-universal" onclick="openModal('${t.name}')">
+                            <i class="fas fa-shopping-cart"></i> Подробнее
+                        </button>
+                    </div>
+                </div>
+            `).join('');
+            
+            // Обновляем данные для модальных окон
+            window.tariffData = {};
+            tariffs.forEach(t => {
+                window.tariffData[t.name] = {
+                    price: t.price,
+                    services: t.services || []
+                };
+            });
+        } catch (err) {
+            console.error('Ошибка загрузки тарифов:', err);
+        }
+    }
+
+    // ===== ЗАГРУЗКА КАРТОЧЕК =====
+    async function loadCardsForPage(page) {
+        try {
+            const res = await fetch(API_BASE + '/cards');
+            if (!res.ok) throw new Error('Ошибка загрузки карточек');
+            const cards = await res.json();
+            
+            // Определяем тип карточек (портфолио или блог)
+            const type = page === 'portfolio' ? 'portfolio' : 'blog';
+            const filtered = cards.filter(c => c.type === type);
+            
+            // Находим контейнер для карточек на странице
+            const container = document.querySelector('#main-content .card-grid');
+            if (!container) return;
+            
+            // Генерируем карточки
+            container.innerHTML = filtered.map(c => `
+                <div class="mini-card">
+                    <h4>${c.title}</h4>
+                    <p>${c.description || ''}</p>
+                    <div class="meta">${c.meta || ''}</div>
+                </div>
+            `).join('');
+        } catch (err) {
+            console.error('Ошибка загрузки карточек:', err);
+        }
+    }
+
+    // ===== ПЕРЕОПРЕДЕЛЯЕМ loadPage =====
+    const originalLoadPage = loadPage;
+    loadPage = function(page) {
+        // Вызываем оригинальную функцию для вставки HTML
+        originalLoadPage(page);
+        
+        // После вставки загружаем данные
+        if (page === 'home') {
+            loadTariffs();
+        } else if (page === 'portfolio' || page === 'blog') {
+            loadCardsForPage(page);
+        }
+    };
+
+    // ===== ПРИ ПЕРВОЙ ЗАГРУЗКЕ =====
+    document.addEventListener('DOMContentLoaded', () => {
+        loadPage('home');
+    });
+</script>   
 
 </body>
 </html>
