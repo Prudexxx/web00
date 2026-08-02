@@ -1,0 +1,605 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Web00 CMS - Панель управления</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            background: #0b0d15;
+            color: #f0f4ff;
+            font-family: 'Inter', sans-serif;
+            padding: 20px;
+        }
+        .container { max-width: 1400px; margin: 0 auto; }
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px 0;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+            margin-bottom: 30px;
+        }
+        .logo {
+            font-size: 24px;
+            font-weight: 700;
+            background: linear-gradient(135deg, #a78bfa, #6ee7b7);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        .login-form {
+            max-width: 400px;
+            margin: 100px auto;
+            background: rgba(255,255,255,0.05);
+            padding: 40px;
+            border-radius: 20px;
+            border: 1px solid rgba(255,255,255,0.1);
+        }
+        .login-form h2 { margin-bottom: 20px; color: #a78bfa; }
+        .login-form input {
+            width: 100%;
+            padding: 12px;
+            margin-bottom: 16px;
+            border-radius: 10px;
+            border: 1px solid rgba(255,255,255,0.1);
+            background: rgba(255,255,255,0.05);
+            color: #fff;
+            font-size: 16px;
+        }
+        .login-form button {
+            width: 100%;
+            padding: 14px;
+            background: linear-gradient(135deg, #a78bfa, #6ee7b7);
+            border: none;
+            border-radius: 10px;
+            font-weight: 700;
+            font-size: 16px;
+            color: #0b0d15;
+            cursor: pointer;
+        }
+        .tabs {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 30px;
+            flex-wrap: wrap;
+        }
+        .tabs button {
+            padding: 10px 24px;
+            border-radius: 30px;
+            border: none;
+            background: rgba(255,255,255,0.05);
+            color: #94a3b8;
+            cursor: pointer;
+            font-size: 14px;
+            transition: 0.3s;
+        }
+        .tabs button.active {
+            background: rgba(167,139,250,0.2);
+            color: #a78bfa;
+        }
+        .tab-content { display: none; }
+        .tab-content.active { display: block; }
+        .card-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 20px;
+            margin-top: 20px;
+        }
+        .admin-card {
+            background: rgba(255,255,255,0.04);
+            border: 1px solid rgba(255,255,255,0.06);
+            border-radius: 16px;
+            padding: 20px;
+            transition: 0.3s;
+        }
+        .admin-card:hover { border-color: rgba(167,139,250,0.3); }
+        .admin-card h4 { margin-bottom: 8px; }
+        .admin-card .meta { color: #64748b; font-size: 12px; }
+        .admin-card .actions {
+            margin-top: 12px;
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+        .admin-card .actions button {
+            padding: 6px 14px;
+            border-radius: 20px;
+            border: none;
+            cursor: pointer;
+            font-size: 12px;
+            font-weight: 600;
+        }
+        .btn-edit {
+            background: rgba(167,139,250,0.2);
+            color: #a78bfa;
+        }
+        .btn-delete {
+            background: rgba(255,107,107,0.2);
+            color: #ff6b6b;
+        }
+        .btn-add {
+            padding: 12px 24px;
+            background: linear-gradient(135deg, #a78bfa, #6ee7b7);
+            border: none;
+            border-radius: 30px;
+            color: #0b0d15;
+            font-weight: 700;
+            cursor: pointer;
+        }
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.7);
+            backdrop-filter: blur(8px);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+        }
+        .modal.active { display: flex; }
+        .modal-content {
+            background: #141824;
+            max-width: 600px;
+            width: 90%;
+            padding: 30px;
+            border-radius: 24px;
+            border: 1px solid rgba(167,139,250,0.15);
+            max-height: 90vh;
+            overflow-y: auto;
+        }
+        .modal-content h2 { margin-bottom: 20px; color: #a78bfa; }
+        .modal-content input,
+        .modal-content textarea,
+        .modal-content select {
+            width: 100%;
+            padding: 10px 14px;
+            margin-bottom: 14px;
+            border-radius: 10px;
+            border: 1px solid rgba(255,255,255,0.1);
+            background: rgba(255,255,255,0.05);
+            color: #fff;
+            font-size: 14px;
+            font-family: inherit;
+        }
+        .modal-content textarea { min-height: 80px; resize: vertical; }
+        .modal-content select option { background: #141824; }
+        .modal-actions {
+            display: flex;
+            gap: 10px;
+            margin-top: 10px;
+        }
+        .modal-actions button {
+            padding: 12px 24px;
+            border-radius: 10px;
+            border: none;
+            font-weight: 700;
+            cursor: pointer;
+            flex: 1;
+        }
+        .btn-save {
+            background: linear-gradient(135deg, #a78bfa, #6ee7b7);
+            color: #0b0d15;
+        }
+        .btn-cancel {
+            background: rgba(255,255,255,0.05);
+            color: #94a3b8;
+        }
+        .service-tag {
+            display: inline-block;
+            background: rgba(167,139,250,0.1);
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            margin: 2px;
+            color: #cbd5e1;
+        }
+        .logout-btn {
+            padding: 8px 20px;
+            background: rgba(255,107,107,0.15);
+            border: 1px solid rgba(255,107,107,0.2);
+            border-radius: 30px;
+            color: #ff6b6b;
+            cursor: pointer;
+            font-weight: 600;
+        }
+        .notification {
+            padding: 12px 20px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            display: none;
+        }
+        .notification.success {
+            display: block;
+            background: rgba(110,231,183,0.15);
+            border: 1px solid rgba(110,231,183,0.3);
+            color: #6ee7b7;
+        }
+        .notification.error {
+            display: block;
+            background: rgba(255,107,107,0.15);
+            border: 1px solid rgba(255,107,107,0.3);
+            color: #ff6b6b;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <div class="header">
+        <div class="logo"><i class="fas fa-code"></i> Web00 CMS</div>
+        <div id="authButtons">
+            <button class="logout-btn" id="logoutBtn" style="display:none;" onclick="logout()">
+                <i class="fas fa-sign-out-alt"></i> Выйти
+            </button>
+        </div>
+    </div>
+
+    <div id="loginForm" class="login-form">
+        <h2><i class="fas fa-lock"></i> Вход в панель</h2>
+        <div id="loginNotification" class="notification"></div>
+        <input type="text" id="loginUsername" placeholder="Логин" value="admin">
+        <input type="password" id="loginPassword" placeholder="Пароль" value="web00admin2026">
+        <button onclick="login()"><i class="fas fa-sign-in-alt"></i> Войти</button>
+    </div>
+
+    <div id="adminPanel" style="display:none;">
+        <div class="tabs">
+            <button class="active" data-tab="tariffs" onclick="switchTab('tariffs')">
+                <i class="fas fa-tags"></i> Тарифы
+            </button>
+            <button data-tab="blog" onclick="switchTab('blog')">
+                <i class="fas fa-newspaper"></i> Блог
+            </button>
+            <button data-tab="portfolio" onclick="switchTab('portfolio')">
+                <i class="fas fa-briefcase"></i> Портфолио
+            </button>
+        </div>
+
+        <div id="notification" class="notification"></div>
+
+        <div id="tab-tariffs" class="tab-content active">
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:20px; flex-wrap:wrap; gap:10px;">
+                <h3><i class="fas fa-tags"></i> Управление тарифами</h3>
+                <button class="btn-add" onclick="openModal('tariff')">
+                    <i class="fas fa-plus"></i> Добавить тариф
+                </button>
+            </div>
+            <div id="tariffsList" class="card-grid"></div>
+        </div>
+
+        <div id="tab-blog" class="tab-content">
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:20px; flex-wrap:wrap; gap:10px;">
+                <h3><i class="fas fa-newspaper"></i> Управление блогом</h3>
+                <button class="btn-add" onclick="openModal('card', 'blog')">
+                    <i class="fas fa-plus"></i> Добавить статью
+                </button>
+            </div>
+            <div id="blogList" class="card-grid"></div>
+        </div>
+
+        <div id="tab-portfolio" class="tab-content">
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:20px; flex-wrap:wrap; gap:10px;">
+                <h3><i class="fas fa-briefcase"></i> Управление портфолио</h3>
+                <button class="btn-add" onclick="openModal('card', 'portfolio')">
+                    <i class="fas fa-plus"></i> Добавить проект
+                </button>
+            </div>
+            <div id="portfolioList" class="card-grid"></div>
+        </div>
+    </div>
+</div>
+
+<div class="modal" id="modal">
+    <div class="modal-content">
+        <h2 id="modalTitle">Добавить</h2>
+        <form id="modalForm">
+            <input type="hidden" id="editId">
+            <input type="hidden" id="editType">
+            
+            <div id="tariffFields">
+                <input type="text" id="tariffName" placeholder="Название тарифа" required>
+                <input type="text" id="tariffPrice" placeholder="Цена" required>
+                <textarea id="tariffDescription" placeholder="Описание"></textarea>
+                <textarea id="tariffServices" placeholder="Услуги (каждая с новой строки)"></textarea>
+                <input type="number" id="tariffOrder" placeholder="Порядок сортировки" value="0">
+            </div>
+            
+            <div id="cardFields" style="display:none;">
+                <input type="text" id="cardTitle" placeholder="Заголовок" required>
+                <textarea id="cardDescription" placeholder="Описание"></textarea>
+                <input type="text" id="cardMeta" placeholder="Мета-информация">
+                <input type="number" id="cardOrder" placeholder="Порядок сортировки" value="0">
+            </div>
+            
+            <div class="modal-actions">
+                <button type="submit" class="btn-save"><i class="fas fa-save"></i> Сохранить</button>
+                <button type="button" class="btn-cancel" onclick="closeModal()">Отмена</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<script>
+const API_BASE = 'https://enhancements-decreased-spelling-satisfaction.trycloudflare.com/api';
+let token = localStorage.getItem('token');
+
+async function login() {
+    const username = document.getElementById('loginUsername').value;
+    const password = document.getElementById('loginPassword').value;
+    const notification = document.getElementById('loginNotification');
+    
+    try {
+        const response = await fetch(`${API_BASE}/tariffs/login`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ username, password })
+        });
+        
+        const data = await response.json();
+        
+        if (response.ok) {
+            token = data.token;
+            localStorage.setItem('token', token);
+            showNotification('Вход выполнен!', 'success');
+            document.getElementById('loginForm').style.display = 'none';
+            document.getElementById('adminPanel').style.display = 'block';
+            document.getElementById('logoutBtn').style.display = 'inline-block';
+            loadData();
+        } else {
+            notification.className = 'notification error';
+            notification.textContent = '❌ ' + (data.error || 'Неверный логин или пароль');
+        }
+    } catch (error) {
+        notification.className = 'notification error';
+        notification.textContent = '❌ Ошибка соединения';
+    }
+}
+
+function logout() {
+    localStorage.removeItem('token');
+    token = null;
+    document.getElementById('loginForm').style.display = 'block';
+    document.getElementById('adminPanel').style.display = 'none';
+    document.getElementById('logoutBtn').style.display = 'none';
+}
+
+async function loadData() {
+    await loadTariffs();
+    await loadCards('blog');
+    await loadCards('portfolio');
+}
+
+async function loadTariffs() {
+    try {
+        const response = await fetch(`${API_BASE}/tariffs`);
+        const tariffs = await response.json();
+        const container = document.getElementById('tariffsList');
+        if (tariffs.length === 0) {
+            container.innerHTML = '<p style="color: #94a3b8;">Тарифов пока нет.</p>';
+            return;
+        }
+        container.innerHTML = tariffs.map(t => `
+            <div class="admin-card">
+                <h4>${t.name}</h4>
+                <p style="color: #6ee7b7; font-size: 20px; font-weight: 700;">${t.price} ₽</p>
+                <p style="color: #94a3b8; font-size: 14px;">${t.description || ''}</p>
+                <div style="margin: 8px 0;">
+                    ${t.services.map(s => `<span class="service-tag">${s}</span>`).join('')}
+                </div>
+                <div class="meta">Создан: ${new Date(t.createdAt).toLocaleDateString()}</div>
+                <div class="actions">
+                    <button class="btn-edit" onclick="editTariff('${t._id}')"><i class="fas fa-edit"></i> Редактировать</button>
+                    <button class="btn-delete" onclick="deleteTariff('${t._id}')"><i class="fas fa-trash"></i> Удалить</button>
+                </div>
+            </div>
+        `).join('');
+    } catch (error) {
+        console.error('Ошибка загрузки тарифов:', error);
+    }
+}
+
+async function loadCards(type) {
+    try {
+        const response = await fetch(`${API_BASE}/cards?type=${type}`);
+        const cards = await response.json();
+        const containerId = type === 'blog' ? 'blogList' : 'portfolioList';
+        const container = document.getElementById(containerId);
+        if (cards.length === 0) {
+            container.innerHTML = '<p style="color: #94a3b8;">Записей пока нет.</p>';
+            return;
+        }
+        container.innerHTML = cards.map(c => `
+            <div class="admin-card">
+                <h4>${c.title}</h4>
+                <p style="color: #94a3b8; font-size: 14px;">${c.description || ''}</p>
+                <div class="meta">${c.meta || ''}</div>
+                <div class="actions">
+                    <button class="btn-edit" onclick="editCard('${c._id}')"><i class="fas fa-edit"></i> Редактировать</button>
+                    <button class="btn-delete" onclick="deleteCard('${c._id}')"><i class="fas fa-trash"></i> Удалить</button>
+                </div>
+            </div>
+        `).join('');
+    } catch (error) {
+        console.error('Ошибка загрузки карточек:', error);
+    }
+}
+
+function switchTab(tab) {
+    document.querySelectorAll('.tabs button').forEach(b => b.classList.remove('active'));
+    document.querySelector(`.tabs button[data-tab="${tab}"]`).classList.add('active');
+    document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+    document.getElementById(`tab-${tab}`).classList.add('active');
+}
+
+function openModal(type, cardType = null) {
+    document.getElementById('modal').classList.add('active');
+    document.getElementById('editId').value = '';
+    if (type === 'tariff') {
+        document.getElementById('modalTitle').textContent = 'Добавить тариф';
+        document.getElementById('tariffFields').style.display = 'block';
+        document.getElementById('cardFields').style.display = 'none';
+        document.getElementById('tariffName').value = '';
+        document.getElementById('tariffPrice').value = '';
+        document.getElementById('tariffDescription').value = '';
+        document.getElementById('tariffServices').value = '';
+        document.getElementById('tariffOrder').value = '0';
+        document.getElementById('editType').value = 'tariff';
+    } else {
+        document.getElementById('modalTitle').textContent = cardType === 'blog' ? 'Добавить статью' : 'Добавить проект';
+        document.getElementById('tariffFields').style.display = 'none';
+        document.getElementById('cardFields').style.display = 'block';
+        document.getElementById('cardTitle').value = '';
+        document.getElementById('cardDescription').value = '';
+        document.getElementById('cardMeta').value = '';
+        document.getElementById('cardOrder').value = '0';
+        document.getElementById('editType').value = 'card';
+        document.getElementById('editType').dataset.cardType = cardType;
+    }
+}
+
+function closeModal() {
+    document.getElementById('modal').classList.remove('active');
+}
+
+async function editTariff(id) {
+    try {
+        const response = await fetch(`${API_BASE}/tariffs/${id}`);
+        const tariff = await response.json();
+        document.getElementById('modal').classList.add('active');
+        document.getElementById('editId').value = id;
+        document.getElementById('editType').value = 'tariff';
+        document.getElementById('modalTitle').textContent = 'Редактировать тариф';
+        document.getElementById('tariffFields').style.display = 'block';
+        document.getElementById('cardFields').style.display = 'none';
+        document.getElementById('tariffName').value = tariff.name;
+        document.getElementById('tariffPrice').value = tariff.price;
+        document.getElementById('tariffDescription').value = tariff.description || '';
+        document.getElementById('tariffServices').value = tariff.services.join('\n');
+        document.getElementById('tariffOrder').value = tariff.order || 0;
+    } catch (error) {
+        showNotification('Ошибка загрузки тарифа', 'error');
+    }
+}
+
+async function editCard(id) {
+    try {
+        const response = await fetch(`${API_BASE}/cards/${id}`);
+        const card = await response.json();
+        document.getElementById('modal').classList.add('active');
+        document.getElementById('editId').value = id;
+        document.getElementById('editType').value = 'card';
+        document.getElementById('editType').dataset.cardType = card.type;
+        document.getElementById('modalTitle').textContent = card.type === 'blog' ? 'Редактировать статью' : 'Редактировать проект';
+        document.getElementById('tariffFields').style.display = 'none';
+        document.getElementById('cardFields').style.display = 'block';
+        document.getElementById('cardTitle').value = card.title;
+        document.getElementById('cardDescription').value = card.description || '';
+        document.getElementById('cardMeta').value = card.meta || '';
+        document.getElementById('cardOrder').value = card.order || 0;
+    } catch (error) {
+        showNotification('Ошибка загрузки карточки', 'error');
+    }
+}
+
+document.getElementById('modalForm').addEventListener('submit', async function(e) {
+    e.preventDefault();
+    const editId = document.getElementById('editId').value;
+    const type = document.getElementById('editType').value;
+    let url, method, data;
+    if (type === 'tariff') {
+        const services = document.getElementById('tariffServices').value.split('\n').filter(s => s.trim());
+        data = {
+            name: document.getElementById('tariffName').value,
+            price: document.getElementById('tariffPrice').value,
+            description: document.getElementById('tariffDescription').value,
+            services: services,
+            order: parseInt(document.getElementById('tariffOrder').value) || 0
+        };
+        url = `${API_BASE}/tariffs`;
+        method = editId ? 'PUT' : 'POST';
+        if (editId) url += `/${editId}`;
+    } else {
+        const cardType = document.getElementById('editType').dataset.cardType;
+        data = {
+            type: cardType,
+            title: document.getElementById('cardTitle').value,
+            description: document.getElementById('cardDescription').value,
+            meta: document.getElementById('cardMeta').value,
+            order: parseInt(document.getElementById('cardOrder').value) || 0
+        };
+        url = `${API_BASE}/cards`;
+        method = editId ? 'PUT' : 'POST';
+        if (editId) url += `/${editId}`;
+    }
+    try {
+        const response = await fetch(url, {
+            method: method,
+            headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
+            body: JSON.stringify(data)
+        });
+        if (response.ok) {
+            closeModal();
+            showNotification('Сохранено успешно!', 'success');
+            loadData();
+        } else {
+            const error = await response.json();
+            showNotification('Ошибка: ' + (error.error || 'Неизвестная ошибка'), 'error');
+        }
+    } catch (error) {
+        showNotification('Ошибка соединения', 'error');
+    }
+});
+
+async function deleteTariff(id) {
+    if (!confirm('Удалить тариф?')) return;
+    try {
+        const response = await fetch(`${API_BASE}/tariffs/${id}`, {
+            method: 'DELETE',
+            headers: { 'Authorization': `Bearer ${token}` }
+        });
+        if (response.ok) {
+            showNotification('Тариф удалён', 'success');
+            loadTariffs();
+        }
+    } catch (error) {
+        showNotification('Ошибка удаления', 'error');
+    }
+}
+
+async function deleteCard(id) {
+    if (!confirm('Удалить запись?')) return;
+    try {
+        const response = await fetch(`${API_BASE}/cards/${id}`, {
+            method: 'DELETE',
+            headers: { 'Authorization': `Bearer ${token}` }
+        });
+        if (response.ok) {
+            showNotification('Запись удалена', 'success');
+            loadData();
+        }
+    } catch (error) {
+        showNotification('Ошибка удаления', 'error');
+    }
+}
+
+function showNotification(message, type = 'success') {
+    const notification = document.getElementById('notification');
+    notification.className = `notification ${type}`;
+    notification.textContent = (type === 'success' ? '✅ ' : '❌ ') + message;
+    setTimeout(() => { notification.className = 'notification'; }, 5000);
+}
+
+if (token) {
+    document.getElementById('loginForm').style.display = 'none';
+    document.getElementById('adminPanel').style.display = 'block';
+    document.getElementById('logoutBtn').style.display = 'inline-block';
+    loadData();
+}
+</script>
+</body>
+</html>
