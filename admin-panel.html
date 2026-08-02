@@ -303,7 +303,7 @@
             
             <div id="tariffFields">
                 <input type="text" id="tariffName" placeholder="Название тарифа" required>
-                <input type="text" id="tariffPrice" placeholder="Цена" required>
+                <input type="text" id="tariffPrice" placeholder="Цена (например: 25000)" required>
                 <textarea id="tariffDescription" placeholder="Описание"></textarea>
                 <textarea id="tariffServices" placeholder="Услуги (каждая с новой строки)"></textarea>
                 <input type="number" id="tariffOrder" placeholder="Порядок сортировки" value="0">
@@ -317,7 +317,7 @@
             </div>
             
             <div class="modal-actions">
-                <button type="submit" class="btn-save"><i class="fas fa-save"></i> Сохранить</button>
+                <button type="button" class="btn-save" onclick="saveForm()"><i class="fas fa-save"></i> Сохранить</button>
                 <button type="button" class="btn-cancel" onclick="closeModal()">Отмена</button>
             </div>
         </form>
@@ -325,9 +325,15 @@
 </div>
 
 <script>
+// ============================================
+// КОНФИГУРАЦИЯ
+// ============================================
 const API_BASE = 'https://enhancements-decreased-spelling-satisfaction.trycloudflare.com/api';
 let token = localStorage.getItem('token');
 
+// ============================================
+// ФУНКЦИИ ВХОДА/ВЫХОДА
+// ============================================
 async function login() {
     const username = document.getElementById('loginUsername').value;
     const password = document.getElementById('loginPassword').value;
@@ -345,7 +351,7 @@ async function login() {
         if (response.ok) {
             token = data.token;
             localStorage.setItem('token', token);
-            showNotification('Вход выполнен!', 'success');
+            showNotification('✅ Вход выполнен успешно!', 'success');
             document.getElementById('loginForm').style.display = 'none';
             document.getElementById('adminPanel').style.display = 'block';
             document.getElementById('logoutBtn').style.display = 'inline-block';
@@ -356,7 +362,7 @@ async function login() {
         }
     } catch (error) {
         notification.className = 'notification error';
-        notification.textContent = '❌ Ошибка соединения';
+        notification.textContent = '❌ Ошибка соединения с сервером';
     }
 }
 
@@ -368,6 +374,9 @@ function logout() {
     document.getElementById('logoutBtn').style.display = 'none';
 }
 
+// ============================================
+// ЗАГРУЗКА ДАННЫХ
+// ============================================
 async function loadData() {
     await loadTariffs();
     await loadCards('blog');
@@ -378,11 +387,13 @@ async function loadTariffs() {
     try {
         const response = await fetch(`${API_BASE}/tariffs`);
         const tariffs = await response.json();
+        
         const container = document.getElementById('tariffsList');
         if (tariffs.length === 0) {
-            container.innerHTML = '<p style="color: #94a3b8;">Тарифов пока нет.</p>';
+            container.innerHTML = '<p style="color: #94a3b8;">Тарифов пока нет. Добавьте первый!</p>';
             return;
         }
+        
         container.innerHTML = tariffs.map(t => `
             <div class="admin-card">
                 <h4>${t.name}</h4>
@@ -393,13 +404,18 @@ async function loadTariffs() {
                 </div>
                 <div class="meta">Создан: ${new Date(t.createdAt).toLocaleDateString()}</div>
                 <div class="actions">
-                    <button class="btn-edit" onclick="editTariff('${t._id}')"><i class="fas fa-edit"></i> Редактировать</button>
-                    <button class="btn-delete" onclick="deleteTariff('${t._id}')"><i class="fas fa-trash"></i> Удалить</button>
+                    <button class="btn-edit" onclick="editTariff('${t._id}')">
+                        <i class="fas fa-edit"></i> Редактировать
+                    </button>
+                    <button class="btn-delete" onclick="deleteTariff('${t._id}')">
+                        <i class="fas fa-trash"></i> Удалить
+                    </button>
                 </div>
             </div>
         `).join('');
     } catch (error) {
         console.error('Ошибка загрузки тарифов:', error);
+        document.getElementById('tariffsList').innerHTML = '<p style="color: #ff6b6b;">Ошибка загрузки тарифов</p>';
     }
 }
 
@@ -407,38 +423,54 @@ async function loadCards(type) {
     try {
         const response = await fetch(`${API_BASE}/cards?type=${type}`);
         const cards = await response.json();
+        
         const containerId = type === 'blog' ? 'blogList' : 'portfolioList';
         const container = document.getElementById(containerId);
+        
         if (cards.length === 0) {
-            container.innerHTML = '<p style="color: #94a3b8;">Записей пока нет.</p>';
+            container.innerHTML = '<p style="color: #94a3b8;">Записей пока нет. Добавьте первую!</p>';
             return;
         }
+        
         container.innerHTML = cards.map(c => `
             <div class="admin-card">
                 <h4>${c.title}</h4>
                 <p style="color: #94a3b8; font-size: 14px;">${c.description || ''}</p>
                 <div class="meta">${c.meta || ''}</div>
                 <div class="actions">
-                    <button class="btn-edit" onclick="editCard('${c._id}')"><i class="fas fa-edit"></i> Редактировать</button>
-                    <button class="btn-delete" onclick="deleteCard('${c._id}')"><i class="fas fa-trash"></i> Удалить</button>
+                    <button class="btn-edit" onclick="editCard('${c._id}')">
+                        <i class="fas fa-edit"></i> Редактировать
+                    </button>
+                    <button class="btn-delete" onclick="deleteCard('${c._id}')">
+                        <i class="fas fa-trash"></i> Удалить
+                    </button>
                 </div>
             </div>
         `).join('');
     } catch (error) {
         console.error('Ошибка загрузки карточек:', error);
+        document.getElementById(containerId).innerHTML = '<p style="color: #ff6b6b;">Ошибка загрузки</p>';
     }
 }
 
+// ============================================
+// ВКЛАДКИ
+// ============================================
 function switchTab(tab) {
     document.querySelectorAll('.tabs button').forEach(b => b.classList.remove('active'));
     document.querySelector(`.tabs button[data-tab="${tab}"]`).classList.add('active');
+    
     document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
     document.getElementById(`tab-${tab}`).classList.add('active');
 }
 
+// ============================================
+// МОДАЛЬНОЕ ОКНО
+// ============================================
 function openModal(type, cardType = null) {
     document.getElementById('modal').classList.add('active');
     document.getElementById('editId').value = '';
+    
     if (type === 'tariff') {
         document.getElementById('modalTitle').textContent = 'Добавить тариф';
         document.getElementById('tariffFields').style.display = 'block';
@@ -470,12 +502,14 @@ async function editTariff(id) {
     try {
         const response = await fetch(`${API_BASE}/tariffs/${id}`);
         const tariff = await response.json();
+        
         document.getElementById('modal').classList.add('active');
         document.getElementById('editId').value = id;
         document.getElementById('editType').value = 'tariff';
         document.getElementById('modalTitle').textContent = 'Редактировать тариф';
         document.getElementById('tariffFields').style.display = 'block';
         document.getElementById('cardFields').style.display = 'none';
+        
         document.getElementById('tariffName').value = tariff.name;
         document.getElementById('tariffPrice').value = tariff.price;
         document.getElementById('tariffDescription').value = tariff.description || '';
@@ -490,6 +524,7 @@ async function editCard(id) {
     try {
         const response = await fetch(`${API_BASE}/cards/${id}`);
         const card = await response.json();
+        
         document.getElementById('modal').classList.add('active');
         document.getElementById('editId').value = id;
         document.getElementById('editType').value = 'card';
@@ -497,6 +532,7 @@ async function editCard(id) {
         document.getElementById('modalTitle').textContent = card.type === 'blog' ? 'Редактировать статью' : 'Редактировать проект';
         document.getElementById('tariffFields').style.display = 'none';
         document.getElementById('cardFields').style.display = 'block';
+        
         document.getElementById('cardTitle').value = card.title;
         document.getElementById('cardDescription').value = card.description || '';
         document.getElementById('cardMeta').value = card.meta || '';
@@ -506,13 +542,26 @@ async function editCard(id) {
     }
 }
 
-document.getElementById('modalForm').addEventListener('submit', async function(e) {
-    e.preventDefault();
+// ============================================
+// СОХРАНЕНИЕ ФОРМЫ
+// ============================================
+async function saveForm() {
     const editId = document.getElementById('editId').value;
     const type = document.getElementById('editType').value;
+    const token = localStorage.getItem('token');
+    
+    if (!token) {
+        showNotification('❌ Требуется авторизация. Войдите заново.', 'error');
+        return;
+    }
+    
     let url, method, data;
+    
     if (type === 'tariff') {
-        const services = document.getElementById('tariffServices').value.split('\n').filter(s => s.trim());
+        const services = document.getElementById('tariffServices').value
+            .split('\n')
+            .filter(s => s.trim());
+        
         data = {
             name: document.getElementById('tariffName').value,
             price: document.getElementById('tariffPrice').value,
@@ -520,6 +569,7 @@ document.getElementById('modalForm').addEventListener('submit', async function(e
             services: services,
             order: parseInt(document.getElementById('tariffOrder').value) || 0
         };
+        
         url = `${API_BASE}/tariffs`;
         method = editId ? 'PUT' : 'POST';
         if (editId) url += `/${editId}`;
@@ -532,73 +582,104 @@ document.getElementById('modalForm').addEventListener('submit', async function(e
             meta: document.getElementById('cardMeta').value,
             order: parseInt(document.getElementById('cardOrder').value) || 0
         };
+        
         url = `${API_BASE}/cards`;
         method = editId ? 'PUT' : 'POST';
         if (editId) url += `/${editId}`;
     }
+    
     try {
         const response = await fetch(url, {
             method: method,
-            headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${token}`
+            },
             body: JSON.stringify(data)
         });
+        
         if (response.ok) {
             closeModal();
-            showNotification('Сохранено успешно!', 'success');
+            showNotification('✅ Сохранено успешно!', 'success');
             loadData();
         } else {
             const error = await response.json();
-            showNotification('Ошибка: ' + (error.error || 'Неизвестная ошибка'), 'error');
+            showNotification('❌ Ошибка: ' + (error.error || 'Неизвестная ошибка'), 'error');
         }
     } catch (error) {
-        showNotification('Ошибка соединения', 'error');
+        showNotification('❌ Ошибка соединения с сервером', 'error');
+        console.error('Ошибка:', error);
     }
-});
+}
 
+// ============================================
+// УДАЛЕНИЕ
+// ============================================
 async function deleteTariff(id) {
     if (!confirm('Удалить тариф?')) return;
+    
     try {
+        const token = localStorage.getItem('token');
         const response = await fetch(`${API_BASE}/tariffs/${id}`, {
             method: 'DELETE',
             headers: { 'Authorization': `Bearer ${token}` }
         });
+        
         if (response.ok) {
-            showNotification('Тариф удалён', 'success');
+            showNotification('✅ Тариф удалён', 'success');
             loadTariffs();
+        } else {
+            showNotification('❌ Ошибка удаления', 'error');
         }
     } catch (error) {
-        showNotification('Ошибка удаления', 'error');
+        showNotification('❌ Ошибка удаления', 'error');
     }
 }
 
 async function deleteCard(id) {
     if (!confirm('Удалить запись?')) return;
+    
     try {
+        const token = localStorage.getItem('token');
         const response = await fetch(`${API_BASE}/cards/${id}`, {
             method: 'DELETE',
             headers: { 'Authorization': `Bearer ${token}` }
         });
+        
         if (response.ok) {
-            showNotification('Запись удалена', 'success');
+            showNotification('✅ Запись удалена', 'success');
             loadData();
+        } else {
+            showNotification('❌ Ошибка удаления', 'error');
         }
     } catch (error) {
-        showNotification('Ошибка удаления', 'error');
+        showNotification('❌ Ошибка удаления', 'error');
     }
 }
 
+// ============================================
+// УВЕДОМЛЕНИЯ
+// ============================================
 function showNotification(message, type = 'success') {
     const notification = document.getElementById('notification');
     notification.className = `notification ${type}`;
     notification.textContent = (type === 'success' ? '✅ ' : '❌ ') + message;
-    setTimeout(() => { notification.className = 'notification'; }, 5000);
+    
+    setTimeout(() => {
+        notification.className = 'notification';
+    }, 5000);
 }
 
+// ============================================
+// ПРОВЕРКА АВТОРИЗАЦИИ ПРИ ЗАГРУЗКЕ
+// ============================================
 if (token) {
     document.getElementById('loginForm').style.display = 'none';
     document.getElementById('adminPanel').style.display = 'block';
     document.getElementById('logoutBtn').style.display = 'inline-block';
     loadData();
+} else {
+    document.getElementById('loginForm').style.display = 'block';
 }
 </script>
 </body>
