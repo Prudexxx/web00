@@ -1,3 +1,5 @@
+cd /tmp/web00
+cat > admin-panel.html << 'EOF'
 <!DOCTYPE html>
 <html lang="ru">
 <head>
@@ -297,23 +299,23 @@
 <div class="modal" id="modal">
     <div class="modal-content">
         <h2 id="modalTitle">Добавить</h2>
-        <form id="modalForm">
-            <input type="hidden" id="editId">
-            <input type="hidden" id="editType">
+        <form id="modalForm" onsubmit="return false;">
+            <input type="hidden" id="editId" name="editId">
+            <input type="hidden" id="editType" name="editType">
             
             <div id="tariffFields">
-                <input type="text" id="tariffName" placeholder="Название тарифа" required>
-                <input type="text" id="tariffPrice" placeholder="Цена (например: 25000)" required>
-                <textarea id="tariffDescription" placeholder="Описание"></textarea>
-                <textarea id="tariffServices" placeholder="Услуги (каждая с новой строки)"></textarea>
-                <input type="number" id="tariffOrder" placeholder="Порядок сортировки" value="0">
+                <input type="text" id="tariffName" name="tariffName" placeholder="Название тарифа" required>
+                <input type="text" id="tariffPrice" name="tariffPrice" placeholder="Цена (например: 25000)" required>
+                <textarea id="tariffDescription" name="tariffDescription" placeholder="Описание"></textarea>
+                <textarea id="tariffServices" name="tariffServices" placeholder="Услуги (каждая с новой строки)"></textarea>
+                <input type="number" id="tariffOrder" name="tariffOrder" placeholder="Порядок сортировки" value="0">
             </div>
             
             <div id="cardFields" style="display:none;">
-                <input type="text" id="cardTitle" placeholder="Заголовок" required>
-                <textarea id="cardDescription" placeholder="Описание"></textarea>
-                <input type="text" id="cardMeta" placeholder="Мета-информация">
-                <input type="number" id="cardOrder" placeholder="Порядок сортировки" value="0">
+                <input type="text" id="cardTitle" name="cardTitle" placeholder="Заголовок" required>
+                <textarea id="cardDescription" name="cardDescription" placeholder="Описание"></textarea>
+                <input type="text" id="cardMeta" name="cardMeta" placeholder="Мета-информация">
+                <input type="number" id="cardOrder" name="cardOrder" placeholder="Порядок сортировки" value="0">
             </div>
             
             <div class="modal-actions">
@@ -470,6 +472,7 @@ function switchTab(tab) {
 function openModal(type, cardType = null) {
     document.getElementById('modal').classList.add('active');
     document.getElementById('editId').value = '';
+    document.getElementById('editType').value = '';
     
     if (type === 'tariff') {
         document.getElementById('modalTitle').textContent = 'Добавить тариф';
@@ -546,9 +549,15 @@ async function editCard(id) {
 // СОХРАНЕНИЕ ФОРМЫ
 // ============================================
 async function saveForm() {
+    console.log('✅ saveForm() вызвана!');
+    
     const editId = document.getElementById('editId').value;
     const type = document.getElementById('editType').value;
     const token = localStorage.getItem('token');
+    
+    console.log('editId:', editId);
+    console.log('type:', type);
+    console.log('token:', token ? 'есть' : 'нет');
     
     if (!token) {
         showNotification('❌ Требуется авторизация. Войдите заново.', 'error');
@@ -588,6 +597,8 @@ async function saveForm() {
         if (editId) url += `/${editId}`;
     }
     
+    console.log('📤 Отправка:', { url, method, data });
+    
     try {
         const response = await fetch(url, {
             method: method,
@@ -598,17 +609,22 @@ async function saveForm() {
             body: JSON.stringify(data)
         });
         
+        console.log('📥 Ответ статус:', response.status);
+        
         if (response.ok) {
+            const result = await response.json();
+            console.log('✅ Успешно сохранено:', result);
             closeModal();
             showNotification('✅ Сохранено успешно!', 'success');
             loadData();
         } else {
             const error = await response.json();
+            console.error('❌ Ошибка:', error);
             showNotification('❌ Ошибка: ' + (error.error || 'Неизвестная ошибка'), 'error');
         }
     } catch (error) {
+        console.error('❌ Ошибка соединения:', error);
         showNotification('❌ Ошибка соединения с сервером', 'error');
-        console.error('Ошибка:', error);
     }
 }
 
@@ -673,14 +689,20 @@ function showNotification(message, type = 'success') {
 // ============================================
 // ПРОВЕРКА АВТОРИЗАЦИИ ПРИ ЗАГРУЗКЕ
 // ============================================
+console.log('🔍 Проверка авторизации...');
+console.log('Токен:', token ? 'есть' : 'нет');
+
 if (token) {
+    console.log('✅ Токен найден, показываем админку');
     document.getElementById('loginForm').style.display = 'none';
     document.getElementById('adminPanel').style.display = 'block';
     document.getElementById('logoutBtn').style.display = 'inline-block';
     loadData();
 } else {
+    console.log('❌ Токена нет, показываем форму входа');
     document.getElementById('loginForm').style.display = 'block';
 }
 </script>
 </body>
 </html>
+
