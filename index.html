@@ -1340,49 +1340,55 @@
    const API_BASE = 'https://enhancements-decreased-spelling-satisfaction.trycloudflare.com/api';
 
     // ===== ЗАГРУЗКА ТАРИФОВ =====
-    async function loadTariffs() {
-        try {
-            const res = await fetch(API_BASE + '/tariffs');
-            if (!res.ok) throw new Error('Ошибка загрузки тарифов');
-            const tariffs = await res.json();
-            
-            const grid = document.querySelector('.grid-3');
-            if (!grid) return;
-            
-            if (tariffs.length === 0) {
-                grid.innerHTML = '<p style="color: #94a3b8; text-align: center; width: 100%;">Нет тарифов. Добавьте их в админке.</p>';
-                return;
-            }
+   let tariffsLoaded = false;
 
-            grid.innerHTML = tariffs.map(t => `
-                <div class="card">
-                    <i class="fas fa-infinity"></i>
-                    <h3>${t.name}</h3>
-                    <p>${t.description || 'Полный цикл разработки'}</p>
-                    <div class="price">от ${t.price} р<small>/ сайт</small></div>
-                    <div class="btn-center">
-                        <button class="btn-universal" onclick="openModal('${t.name}')">
-                            <i class="fas fa-shopping-cart"></i> Подробнее
-                        </button>
-                    </div>
-                </div>
-            `).join('');
-            
-            // Обновляем данные для модальных окон
-            window.tariffData = {};
-            tariffs.forEach(t => {
-                window.tariffData[t.name] = {
-                    price: t.price,
-                    services: t.services || []
-                };
-            });
-        } catch (err) {
-            console.error('Ошибка загрузки тарифов:', err);
-            const grid = document.querySelector('.grid-3');
-            if (grid) grid.innerHTML = '<p style="color: #ff6b6b; text-align: center; width: 100%;">Не удалось загрузить тарифы. Проверьте подключение к бэкенду.</p>';
+async function loadTariffs() {
+    // Если уже загружены - не загружаем снова
+    if (tariffsLoaded) return;
+    
+    try {
+        const res = await fetch(API_BASE + '/tariffs');
+        if (!res.ok) throw new Error('Ошибка загрузки тарифов');
+        const tariffs = await res.json();
+        
+        const grid = document.querySelector('.grid-3');
+        if (!grid) return;
+        
+        if (tariffs.length === 0) {
+            grid.innerHTML = '<p style="color: #94a3b8; text-align: center; width: 100%;">Нет тарифов. Добавьте их в админке.</p>';
+            return;
         }
-    }
 
+        grid.innerHTML = tariffs.map(t => `
+            <div class="card">
+                <i class="fas fa-infinity"></i>
+                <h3>${t.name}</h3>
+                <p>${t.description || 'Полный цикл разработки'}</p>
+                <div class="price">от ${t.price} р<small>/ сайт</small></div>
+                <div class="btn-center">
+                    <button class="btn-universal" onclick="openModal('${t.name}')">
+                        <i class="fas fa-shopping-cart"></i> Подробнее
+                    </button>
+                </div>
+            </div>
+        `).join('');
+        
+        tariffsLoaded = true;
+        
+        // Обновляем данные для модальных окон
+        window.tariffData = {};
+        tariffs.forEach(t => {
+            window.tariffData[t.name] = {
+                price: t.price,
+                services: t.services || []
+            };
+        });
+    } catch (err) {
+        console.error('Ошибка загрузки тарифов:', err);
+        const grid = document.querySelector('.grid-3');
+        if (grid) grid.innerHTML = '<p style="color: #ff6b6b; text-align: center; width: 100%;">Не удалось загрузить тарифы. Проверьте подключение к бэкенду.</p>';
+    }
+}
     // ===== ЗАГРУЗКА КАРТОЧЕК =====
     async function loadCardsForPage(page) {
         try {
