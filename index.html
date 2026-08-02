@@ -1,3 +1,5 @@
+cd /tmp/web00
+cat > index.html << 'EOF'
 <!DOCTYPE html>
 <html lang="ru">
 <head>
@@ -6,13 +8,11 @@
     <title>Web00.ru — продажа сайтов</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" />
     <style>
-        /* Глобальные стили */
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
         }
-
         body {
             background: #0b0d15;
             font-family: 'Inter', system-ui, -apple-system, sans-serif;
@@ -21,15 +21,12 @@
             min-height: 100vh;
             overflow-x: hidden;
         }
-
         .container {
             max-width: 1280px;
             margin: 0 auto;
             padding: 0 32px;
             overflow-x: hidden;
         }
-
-        /* Шапка */
         .navbar {
             display: flex;
             justify-content: space-between;
@@ -44,7 +41,6 @@
             z-index: 100;
             width: 100%;
         }
-
         .logo {
             font-size: 28px;
             font-weight: 700;
@@ -59,14 +55,12 @@
         .logo:hover {
             transform: scale(1.02);
         }
-
         .nav-links {
             display: flex;
             gap: 12px 32px;
             flex-wrap: wrap;
             align-items: center;
         }
-
         .nav-links button {
             background: none;
             border: none;
@@ -80,7 +74,6 @@
             font-family: inherit;
             white-space: nowrap;
         }
-
         .nav-links button::after {
             content: '';
             position: absolute;
@@ -91,22 +84,18 @@
             background: linear-gradient(90deg, #a78bfa, #6ee7b7);
             transition: 0.3s;
         }
-
         .nav-links button:hover {
             color: #fff;
         }
         .nav-links button:hover::after {
             width: 100%;
         }
-
         .nav-links button.active {
             color: #fff;
         }
         .nav-links button.active::after {
             width: 100%;
         }
-
-        /* ===== УНИВЕРСАЛЬНЫЙ СТИЛЬ КНОПОК ===== */
         .btn-universal,
         .btn-universal-outline {
             display: inline-flex;
@@ -128,41 +117,33 @@
             white-space: nowrap;
             flex-shrink: 0;
         }
-
         .btn-universal {
             background: linear-gradient(135deg, #a78bfa, #6ee7b7);
             color: #0b0d15;
             box-shadow: 0 4px 20px rgba(167, 139, 250, 0.25);
         }
-
         .btn-universal:hover {
             transform: translateY(-3px) scale(1.03);
             box-shadow: 0 10px 40px rgba(167, 139, 250, 0.45);
         }
-
         .btn-universal:active {
             transform: scale(0.96);
             transition-duration: 0.08s;
         }
-
         .btn-universal-outline {
             background: transparent;
             border: 1.5px solid rgba(167, 139, 250, 0.35);
             color: #f0f4ff;
         }
-
         .btn-universal-outline:hover {
             background: rgba(167, 139, 250, 0.12);
             border-color: #a78bfa;
             transform: translateY(-2px);
             box-shadow: 0 6px 25px rgba(167, 139, 250, 0.2);
         }
-
         .btn-universal-outline:active {
             transform: scale(0.96);
         }
-
-        /* Центрирование кнопок */
         .btn-center {
             display: flex;
             justify-content: center;
@@ -172,7 +153,6 @@
             margin: 16px 0;
             width: 100%;
         }
-
         .btn-group-equal {
             display: flex;
             flex-wrap: wrap;
@@ -181,7 +161,6 @@
             gap: 14px;
             width: 100%;
         }
-
         .btn-group-equal .btn-universal,
         .btn-group-equal .btn-universal-outline {
             flex: 1 1 auto;
@@ -189,14 +168,12 @@
             max-width: 280px;
             white-space: nowrap;
         }
-
         .nav-links .btn-universal,
         .nav-links .btn-universal-outline {
             min-width: 140px;
             padding: 10px 20px;
             font-size: 0.9rem;
         }
-
         #main-content {
             padding: 40px 0 60px;
             min-height: 60vh;
@@ -204,7 +181,6 @@
             width: 100%;
             overflow-x: hidden;
         }
-
         @keyframes fadeSlide {
             0% {
                 opacity: 0;
@@ -215,12 +191,10 @@
                 transform: translateY(0);
             }
         }
-
         .faq-page {
             width: 100%;
             overflow-x: hidden;
         }
-
         .faq-page h2 {
             font-size: 2.6rem;
             font-weight: 700;
@@ -231,7 +205,6 @@
             background-clip: text;
             word-break: break-word;
         }
-
         .faq-page .subhead {
             color: #94a3b8;
             font-size: 1.1rem;
@@ -240,13 +213,11 @@
             padding-bottom: 20px;
             word-break: break-word;
         }
-
         .faq-grid {
             display: grid;
             grid-template-columns: 1fr 1fr;
             gap: 28px 40px;
         }
-
         .faq-block h3 {
             color: #a78bfa;
             font-size: 1.1rem;
@@ -256,17 +227,14 @@
             align-items: center;
             gap: 10px;
         }
-
         .faq-block h3 i {
             color: #6ee7b7;
             font-size: 0.9rem;
         }
-
         .faq-block ul {
             list-style: none;
             padding: 0;
         }
-
         .faq-block ul li {
             color: #cbd5e1;
             padding: 5px 0;
@@ -275,14 +243,12 @@
             font-size: 0.98rem;
             word-break: break-word;
         }
-
         .faq-block ul li::before {
             content: "▹";
             position: absolute;
             left: 0;
             color: #6ee7b7;
         }
-
         .faq-block p {
             color: #cbd5e1;
             font-size: 0.98rem;
@@ -290,7 +256,6 @@
             margin-bottom: 4px;
             word-break: break-word;
         }
-
         .faq-highlight {
             background: rgba(167, 139, 250, 0.07);
             border-radius: 16px;
@@ -298,19 +263,16 @@
             margin-top: 10px;
             border-left: 3px solid #a78bfa;
         }
-
         .faq-highlight p {
             color: #e2e8f0;
             padding-left: 0;
         }
-
         .faq-tags {
             display: flex;
             flex-wrap: wrap;
             gap: 10px;
             margin: 14px 0 6px;
         }
-
         .faq-tags span {
             background: rgba(167, 139, 250, 0.1);
             padding: 6px 18px;
@@ -320,7 +282,6 @@
             border: 1px solid rgba(167, 139, 250, 0.08);
             white-space: nowrap;
         }
-
         .faq-questions-grid {
             display: grid;
             grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
@@ -328,14 +289,12 @@
             margin-top: 20px;
             width: 100%;
         }
-
         .faq-question-wrapper {
             display: flex;
             flex-direction: column;
             width: 100%;
             min-width: 0;
         }
-
         .faq-question-btn {
             display: inline-flex;
             align-items: center;
@@ -360,20 +319,17 @@
             line-height: 1.3;
             position: relative;
         }
-
         .faq-question-btn:hover {
             background: rgba(167, 139, 250, 0.12);
             border-color: rgba(167, 139, 250, 0.3);
             transform: translateY(-2px);
             color: #fff;
         }
-
         .faq-question-btn.active {
             background: rgba(167, 139, 250, 0.15);
             border-color: #a78bfa;
             color: #fff;
         }
-
         .faq-question-btn .fa-chevron-right {
             position: absolute;
             left: 16px;
@@ -382,12 +338,10 @@
             flex-shrink: 0;
             font-size: 0.9rem;
         }
-
         .faq-question-btn .btn-text {
             padding-left: 24px;
             flex: 1;
         }
-
         .faq-answer {
             display: none;
             margin-top: 8px;
@@ -402,15 +356,12 @@
             animation: fadeSlide 0.3s ease;
             word-break: break-word;
         }
-
         .faq-answer.show {
             display: block;
         }
-
         .faq-answer strong {
             color: #a78bfa;
         }
-
         .faq-cta-block {
             margin-top: 40px;
             padding: 32px 28px;
@@ -420,25 +371,21 @@
             text-align: center;
             width: 100%;
         }
-
         .faq-cta-block h3 {
             color: #f0f4ff;
             font-size: 1.4rem;
             font-weight: 700;
             margin-bottom: 8px;
         }
-
         .faq-cta-block p {
             color: #94a3b8;
             font-size: 1.05rem;
             margin-bottom: 20px;
         }
-
         .page-template {
             width: 100%;
             overflow-x: hidden;
         }
-
         .page-template h2 {
             font-size: 2.6rem;
             font-weight: 700;
@@ -449,7 +396,6 @@
             background-clip: text;
             word-break: break-word;
         }
-
         .page-template .page-desc {
             color: #94a3b8;
             font-size: 1.15rem;
@@ -457,13 +403,11 @@
             margin-bottom: 32px;
             word-break: break-word;
         }
-
         .page-template .card-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
             gap: 24px;
         }
-
         .page-template .mini-card {
             background: rgba(255, 255, 255, 0.04);
             border: 1px solid rgba(255, 255, 255, 0.06);
@@ -471,30 +415,25 @@
             padding: 24px;
             transition: 0.3s;
         }
-
         .page-template .mini-card:hover {
             border-color: rgba(167, 139, 250, 0.25);
             transform: translateY(-6px);
         }
-
         .page-template .mini-card h4 {
             font-size: 1.2rem;
             margin-bottom: 6px;
             word-break: break-word;
         }
-
         .page-template .mini-card p {
             color: #94a3b8;
             font-size: 0.95rem;
             word-break: break-word;
         }
-
         .page-template .mini-card .meta {
             color: #64748b;
             font-size: 0.85rem;
             margin-top: 10px;
         }
-
         .grid-3 {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
@@ -502,7 +441,6 @@
             margin: 60px 0;
             width: 100%;
         }
-
         .card {
             background: rgba(255, 255, 255, 0.04);
             backdrop-filter: blur(8px);
@@ -516,13 +454,11 @@
             flex-direction: column;
             align-items: center;
         }
-
         .card:hover {
             transform: translateY(-12px);
             border-color: rgba(167, 139, 250, 0.3);
             box-shadow: 0 30px 60px rgba(0, 0, 0, 0.4);
         }
-
         .card i {
             font-size: 2.8rem;
             background: linear-gradient(135deg, #a78bfa, #6ee7b7);
@@ -532,21 +468,18 @@
             margin-bottom: 16px;
             display: inline-block;
         }
-
         .card h3 {
             font-size: 1.6rem;
             font-weight: 700;
             margin-bottom: 10px;
             word-break: break-word;
         }
-
         .card p {
             color: #94a3b8;
             margin-bottom: 16px;
             word-break: break-word;
             flex: 1;
         }
-
         .card .price {
             font-size: 2rem;
             font-weight: 700;
@@ -557,18 +490,15 @@
             font-size: 0.9rem;
             color: #64748b;
         }
-
         .card .btn-center {
             width: 100%;
             margin-top: auto;
         }
-
         .card .btn-center .btn-universal {
             min-width: 180px;
             width: 100%;
             max-width: 220px;
         }
-
         .footer {
             padding: 32px 0 20px;
             border-top: 1px solid rgba(255, 255, 255, 0.05);
@@ -581,7 +511,6 @@
             margin-top: 20px;
             width: 100%;
         }
-
         .footer .social a {
             color: #94a3b8;
             margin-left: 20px;
@@ -591,8 +520,6 @@
         .footer .social a:hover {
             color: #a78bfa;
         }
-
-        /* ===== МОДАЛЬНОЕ ОКНО (ФОРМА) ===== */
         .modal-overlay {
             position: fixed;
             top: 0;
@@ -610,12 +537,10 @@
             z-index: 999;
             padding: 20px;
         }
-
         .modal-overlay.active {
             opacity: 1;
             visibility: visible;
         }
-
         .modal {
             background: #141824;
             max-width: 480px;
@@ -628,29 +553,24 @@
             border: 1px solid rgba(167, 139, 250, 0.15);
             position: relative;
         }
-
         .modal-overlay.active .modal {
             transform: translateY(0) scale(1);
         }
-
         .modal-header {
             display: flex;
             justify-content: space-between;
             align-items: flex-start;
             margin-bottom: 8px;
         }
-
         .modal-header h2 {
             font-size: 1.5rem;
             font-weight: 700;
             color: #f0f4ff;
         }
-
         .modal-header h2 i {
             color: #a78bfa;
             margin-right: 8px;
         }
-
         .modal-close {
             background: none;
             border: none;
@@ -661,12 +581,10 @@
             line-height: 1;
             padding: 0 4px;
         }
-
         .modal-close:hover {
             color: #f0f4ff;
             transform: rotate(90deg);
         }
-
         .modal-price {
             font-size: 1.8rem;
             font-weight: 700;
@@ -675,20 +593,17 @@
             border-bottom: 1px solid rgba(255, 255, 255, 0.06);
             margin-bottom: 18px;
         }
-
         .modal-price small {
             font-size: 1rem;
             font-weight: 400;
             color: #94a3b8;
         }
-
         .service-list {
             list-style: none;
             margin: 16px 0 24px;
             padding: 0;
             text-align: left;
         }
-
         .service-list li {
             display: flex;
             align-items: center;
@@ -698,23 +613,19 @@
             font-size: 0.95rem;
             color: #cbd5e1;
         }
-
         .service-list li:last-child {
             border-bottom: none;
         }
-
         .service-list li i {
             color: #6ee7b7;
             font-size: 0.9rem;
             width: 20px;
             text-align: center;
         }
-
         .form-group {
             margin-bottom: 16px;
             text-align: left;
         }
-
         .form-group label {
             display: block;
             font-size: 0.85rem;
@@ -722,7 +633,6 @@
             margin-bottom: 4px;
             font-weight: 500;
         }
-
         .form-group input {
             width: 100%;
             padding: 12px 16px;
@@ -735,17 +645,14 @@
             transition: 0.3s;
             outline: none;
         }
-
         .form-group input:focus {
             border-color: #a78bfa;
             background: rgba(167, 139, 250, 0.08);
             box-shadow: 0 0 0 3px rgba(167, 139, 250, 0.15);
         }
-
         .form-group input::placeholder {
             color: #64748b;
         }
-
         .modal .btn-universal {
             width: 100%;
             min-width: unset;
@@ -753,8 +660,6 @@
             font-size: 1.05rem;
             margin-top: 8px;
         }
-
-        /* ===== УВЕДОМЛЕНИЕ-СЕРДЕЧКО ===== */
         .heart-notification {
             position: fixed;
             top: 50%;
@@ -773,13 +678,11 @@
             max-width: 400px;
             width: 90%;
         }
-
         .heart-notification.show {
             opacity: 1;
             visibility: visible;
             transform: translate(-50%, -50%) scale(1);
         }
-
         .heart-notification .heart-icon {
             font-size: 4rem;
             color: #ff6b8a;
@@ -787,7 +690,6 @@
             display: block;
             margin-bottom: 16px;
         }
-
         @keyframes heartBeat {
             0% {
                 transform: scale(1);
@@ -796,25 +698,20 @@
                 transform: scale(1.15);
             }
         }
-
         .heart-notification h3 {
             color: #f0f4ff;
             font-size: 1.5rem;
             margin-bottom: 8px;
         }
-
         .heart-notification p {
             color: #94a3b8;
             font-size: 1rem;
         }
-
         .heart-notification .btn-universal {
             margin-top: 20px;
             min-width: 140px;
             padding: 12px 32px;
         }
-
-        /* ===== АДАПТИВ ===== */
         @media (max-width: 768px) {
             .container {
                 padding: 0 16px;
@@ -897,7 +794,6 @@
                 font-size: 1.5rem;
             }
         }
-
         @media (max-width: 480px) {
             .container {
                 padding: 0 12px;
@@ -986,9 +882,7 @@
     </style>
 </head>
 <body>
-
     <div class="container">
-        <!-- Шапка -->
         <header class="navbar">
             <div class="logo" onclick="loadPage('home')"><i class="fas fa-code"></i> Web00.ru</div>
             <div class="nav-links">
@@ -1000,11 +894,7 @@
                 <button class="btn-universal-outline" onclick="loadPage('faq')" style="min-width:120px; padding:10px 16px; font-size:0.9rem;"><i class="fas fa-rocket"></i> Связаться</button>
             </div>
         </header>
-
-        <!-- Динамический контент -->
         <div id="main-content"></div>
-
-        <!-- Подвал -->
         <footer class="footer">
             <div>© Web00.ru Честно, прозрачно, надёжно.</div>
             <div class="social">
@@ -1018,8 +908,6 @@
             </div>
         </footer>
     </div>
-
-    <!-- ===== МОДАЛЬНОЕ ОКНО (ФОРМА) ===== -->
     <div class="modal-overlay" id="tariffModal">
         <div class="modal">
             <div class="modal-header">
@@ -1028,18 +916,12 @@
             </div>
             <div class="modal-price" id="modalPriceDisplay">от 25.000 р <small>/ сайт</small></div>
             <ul class="service-list" id="serviceList"></ul>
-
-            <!-- ===== ФОРМА ОТПРАВЛЯЕТСЯ НА ПОЧТУ ЧЕРЕЗ FORMSUBMIT ===== -->
-            <!-- ⚠️ ЗАМЕНИТЕ ВАШ_EMAIL@example.com НА СВОЙ EMAIL -->
             <form id="orderForm" action="https://formsubmit.co/ptrm00@mail.ru" method="POST">
-                <!-- Скрытые поля для FormSubmit -->
                 <input type="hidden" name="_subject" value="Новая заявка с сайта Web00.ru">
                 <input type="hidden" name="_captcha" value="false">
                 <input type="hidden" name="_template" value="table">
-                <input type="hidden" name="_next" value="https://prudexxx.github.io/web00-pro/">
-                
+                <input type="hidden" name="_next" value="https://prudexxx.github.io/web00/">
                 <input type="hidden" name="Тариф" id="hiddenTariff" value="">
-
                 <div class="form-group">
                     <label for="userName"><i class="fas fa-user"></i> Ваше имя</label>
                     <input type="text" id="userName" name="Имя" placeholder="Например: Александр" required>
@@ -1048,13 +930,10 @@
                     <label for="userPhone"><i class="fas fa-phone"></i> Телефон</label>
                     <input type="tel" id="userPhone" name="Телефон" placeholder="+7 (999) 123-45-67" required>
                 </div>
-
                 <button type="submit" class="btn-universal" id="submitBtn"><i class="fas fa-paper-plane"></i> Отправить заявку</button>
             </form>
         </div>
     </div>
-
-    <!-- ===== УВЕДОМЛЕНИЕ-СЕРДЕЧКО ===== -->
     <div class="heart-notification" id="heartNotification">
         <span class="heart-icon">❤️</span>
         <h3>Спасибо!</h3>
@@ -1063,43 +942,23 @@
     </div>
 
     <script>
-        // ========== ДАННЫЕ ТАРИФОВ ==========
+        const API_BASE = 'https://enhancements-decreased-spelling-satisfaction.trycloudflare.com/api';
+
         const tariffData = {
             'Лендинг': {
-                price: ' 25.000',
-                services: [
-                    'Дизайн макета (уникальный)',
-                    'Брендинг + логотип',
-                    'Адаптивная вёрстка',
-                    'Анимации при скролле',
-                    'Форма обратной связи'
-                ]
+                price: '25.000',
+                services: ['Дизайн макета (уникальный)', 'Брендинг + логотип', 'Адаптивная вёрстка', 'Анимации при скролле', 'Форма обратной связи']
             },
             'Старт': {
-                price: ' 50.000',
-                services: [
-                    'Дизайн + прототип',
-                    'Адаптив под все устройства',
-                    'Настройка SEO-базы',
-                    'Подключение аналитики',
-                    'Техническая поддержка 1 месяц',
-                    'Форма обратной связи',
-                    'CSM (редактировать и управлять содержимым сайтa)'
-                ]
+                price: '50.000',
+                services: ['Дизайн + прототип', 'Адаптив под все устройства', 'Настройка SEO-базы', 'Подключение аналитики', 'Техническая поддержка 1 месяц', 'Форма обратной связи', 'CMS']
             },
             'Бизнес': {
-                price: ' 350.000',
-                services: [
-                    'Интернет-магазин / корзина',
-                    'CRM-интеграция (AmoCRM, Bitrix)',
-                    'Личный кабинет',
-                    'Админ-панель',
-                    'Приоритетная поддержка'
-                ]
+                price: '350.000',
+                services: ['Интернет-магазин / корзина', 'CRM-интеграция (AmoCRM, Bitrix)', 'Личный кабинет', 'Админ-панель', 'Приоритетная поддержка']
             }
         };
 
-        // ========== ЭЛЕМЕНТЫ ==========
         const modalOverlay = document.getElementById('tariffModal');
         const modalTariffName = document.getElementById('modalTariffName');
         const modalPriceDisplay = document.getElementById('modalPriceDisplay');
@@ -1110,34 +969,28 @@
         const heartNotification = document.getElementById('heartNotification');
         const submitBtn = document.getElementById('submitBtn');
 
-        // ========== ФУНКЦИЯ ОТКРЫТИЯ МОДАЛКИ ==========
         function openModal(tariffKey) {
             const data = tariffData[tariffKey];
             if (!data) return;
-
             modalTariffName.textContent = tariffKey;
             modalPriceDisplay.innerHTML = `от ${data.price} р <small>/ сайт</small>`;
             hiddenTariff.value = tariffKey;
-
             serviceListEl.innerHTML = '';
             data.services.forEach(service => {
                 const li = document.createElement('li');
                 li.innerHTML = `<i class="fas fa-check-circle"></i> ${service}`;
                 serviceListEl.appendChild(li);
             });
-
             modalOverlay.classList.add('active');
             document.body.style.overflow = 'hidden';
         }
 
-        // ========== ЗАКРЫТИЕ МОДАЛКИ ==========
         function closeModal() {
             modalOverlay.classList.remove('active');
             document.body.style.overflow = '';
             orderForm.reset();
         }
 
-        // ========== УВЕДОМЛЕНИЕ-СЕРДЕЧКО ==========
         function showHeartNotification() {
             heartNotification.classList.add('show');
         }
@@ -1146,14 +999,9 @@
             heartNotification.classList.remove('show');
         }
 
-        // ========== ОБРАБОТЧИК ФОРМЫ (ОТПРАВКА НА ПОЧТУ) ==========
         orderForm.addEventListener('submit', function(e) {
-            // Показываем уведомление о загрузке
             submitBtn.disabled = true;
             submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Отправка...';
-            
-            // Форма отправится на FormSubmit автоматически
-            // Через 2 секунды показываем уведомление об успехе
             setTimeout(function() {
                 closeModal();
                 showHeartNotification();
@@ -1162,7 +1010,6 @@
             }, 1500);
         });
 
-        // ========== ЗАКРЫТИЕ МОДАЛКИ ==========
         closeModalBtn.addEventListener('click', closeModal);
         modalOverlay.addEventListener('click', function(e) {
             if (e.target === this) closeModal();
@@ -1174,7 +1021,6 @@
             e.stopPropagation();
         });
 
-        // ========== СТРАНИЦЫ ==========
         function toggleAnswer(id) {
             const answer = document.getElementById('answer-' + id);
             const btn = document.getElementById('btn-' + id);
@@ -1184,148 +1030,177 @@
             }
         }
 
+        let tariffsLoaded = false;
+
+        async function loadTariffs() {
+            if (tariffsLoaded) return;
+            try {
+                const res = await fetch(API_BASE + '/tariffs');
+                if (!res.ok) throw new Error('Ошибка загрузки тарифов');
+                const tariffs = await res.json();
+                const grid = document.querySelector('.grid-3');
+                if (!grid) return;
+                if (tariffs.length === 0) {
+                    grid.innerHTML = '<p style="color: #94a3b8; text-align: center; width: 100%;">Нет тарифов. Добавьте их в админке.</p>';
+                    return;
+                }
+                grid.innerHTML = tariffs.map(t => `
+                    <div class="card">
+                        <i class="fas fa-infinity"></i>
+                        <h3>${t.name}</h3>
+                        <p>${t.description || 'Полный цикл разработки'}</p>
+                        <div class="price">от ${t.price} р<small>/ сайт</small></div>
+                        <div class="btn-center">
+                            <button class="btn-universal" onclick="openModal('${t.name}')">
+                                <i class="fas fa-shopping-cart"></i> Подробнее
+                            </button>
+                        </div>
+                    </div>
+                `).join('');
+                tariffsLoaded = true;
+                window.tariffData = {};
+                tariffs.forEach(t => {
+                    window.tariffData[t.name] = {
+                        price: t.price,
+                        services: t.services || []
+                    };
+                });
+            } catch (err) {
+                console.error('Ошибка загрузки тарифов:', err);
+                const grid = document.querySelector('.grid-3');
+                if (grid) grid.innerHTML = '<p style="color: #ff6b6b; text-align: center; width: 100%;">Не удалось загрузить тарифы. Проверьте подключение к бэкенду.</p>';
+            }
+        }
+
+        async function loadCardsForPage(page) {
+            try {
+                const res = await fetch(API_BASE + '/cards');
+                if (!res.ok) throw new Error('Ошибка загрузки карточек');
+                const cards = await res.json();
+                const type = page === 'portfolio' ? 'portfolio' : 'blog';
+                const filtered = cards.filter(c => c.type === type);
+                const container = document.querySelector('#main-content .card-grid');
+                if (!container) return;
+                if (filtered.length === 0) {
+                    container.innerHTML = '<p style="color: #94a3b8; text-align: center; width: 100%;">Нет карточек. Добавьте их в админке.</p>';
+                    return;
+                }
+                container.innerHTML = filtered.map(c => `
+                    <div class="mini-card">
+                        <h4>${c.title}</h4>
+                        <p>${c.description || ''}</p>
+                        <div class="meta">${c.meta || ''}</div>
+                    </div>
+                `).join('');
+            } catch (err) {
+                console.error('Ошибка загрузки карточек:', err);
+                const container = document.querySelector('#main-content .card-grid');
+                if (container) container.innerHTML = '<p style="color: #ff6b6b; text-align: center; width: 100%;">Не удалось загрузить карточки.</p>';
+            }
+        }
+
         const pages = {
             home: `
-          <div style="text-align:center; padding:60px 0 40px; width:100%;">
-            <h1 style="font-size:clamp(2.2rem,7vw,4.8rem); font-weight:800; line-height:1.1; background:linear-gradient(to right,#f0f4ff,#a78bfa,#6ee7b7); -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text; margin-bottom:20px; word-break:break-word;">Продаём сайты,<br />которые работают</h1>
-            <p style="font-size:1.1rem; max-width:700px; color:#94a3b8; margin:0 auto 32px; padding:0 10px;">Готовые решения с высокой конверсией. Дизайн, скорость, SEO — всё включено.</p>
-            <button class="btn-universal" onclick="window.location.href='tel:+79194449517'"><i class="fas fa-bolt"></i> Заказать сайт сейчас</button>
-            <button class="btn-universal-outline" onclick="loadPage('portfolio')"><i class="fas fa-play"></i> Посмотреть демо-проекты</button>
-          </div>
-          <div class="grid-3">
-            <div class="card">
-              <i class="fas fa-infinity"></i>
-              <h3>Лендинг</h3>
-              <p>Полный цикл: дизайн, брендинг,современные анимации.</p>
-              <div class="price">от 25.000 р<small>/ сайт</small></div>
-              <div class="btn-center">
-                <button class="btn-universal" onclick="openModal('Лендинг')"><i class="fas fa-shopping-cart"></i>Подробнее</button>
-              </div>
-            </div>
-            <div class="card">
-              <i class="fas fa-crown"></i>
-              <h3>Старт</h3>
-              <p>Идеальный для малого бизнеса и личных проектов.</p>
-              <div class="price">от 50.000 р <small>/ сайт</small></div>
-              <div class="btn-center">
-                <button class="btn-universal" onclick="openModal('Старт')"><i class="fas fa-shopping-cart"></i> Подробнее</button>
-              </div>
-            </div>
-            <div class="card" style="border:2px solid rgba(167,139,250,0.3);">
-              <i class="fas fa-rocket"></i>
-              <h3>Бизнес</h3>
-              <p>Мощный функционал, корзина, CRM-интеграция.</p>
-              <div class="price">от 350.000 р <small>/ сайт</small></div>
-              <div class="btn-center">
-                <button class="btn-universal" onclick="openModal('Бизнес')"><i class="fas fa-shopping-cart"></i> Подробнее</button>
-              </div>
-            </div>
-          </div>
-          <div style="background: radial-gradient(circle at 30% 30%, rgba(167,139,250,0.1), transparent 70%); border-radius: 40px; padding: 40px 20px; text-align: center; border: 1px solid rgba(255,255,255,0.04); width:100%;">
-            <h2 style="font-size: clamp(1.8rem, 5vw, 2.4rem); font-weight: 700; margin-bottom: 12px;">Готов поднять продажи?</h2>
-            <p style="color: #94a3b8; max-width: 600px; margin: 0 auto 28px; font-size: 1.05rem; padding:0 10px;">Мы создаём сайты, которые приносят прибыль. Оставь заявку — получи консультацию.</p>
-            <div class="btn-center">
-              <button class="btn-universal" onclick="loadPage('faq')" style="font-size:1rem; padding:14px 40px;"><i class="fas fa-paper-plane"></i> Получить предложение</button>
-            </div>
-          </div>
-        `,
-
-            faq: `
-          <div class="faq-page">
-            <h2><i class="fas fa-question-circle" style="background: none; -webkit-text-fill-color: #a78bfa; color: #a78bfa;"></i> FAQ</h2>
-            <div class="subhead">Ответы на вопросы перед запуском сайта: цена, демо, сроки, заявка, правки, поддержка и передача обращений в удобный канал.</div>
-            <div style="display: flex; flex-wrap: wrap; gap: 10px; margin-bottom: 28px; justify-content: center; width:100%;">
-          
-              <span style="background: rgba(167,139,250,0.12); padding: 6px 16px; border-radius: 60px; font-size: 0.85rem; border: 1px solid rgba(167,139,250,0.1); white-space:nowrap;"><i class="fas fa-hand-holding-heart" style="color: #6ee7b7;"></i> Без предоплаты</span>
-                  <span style="background: rgba(167,139,250,0.12); padding: 6px 16px; border-radius: 60px; font-size: 0.85rem; border: 1px solid rgba(167,139,250,0.1); white-space:nowrap;"><i class="fas fa-eye" style="color: #6ee7b7;"></i> Демо до оплаты</span>
-              <span style="background: rgba(167,139,250,0.12); padding: 6px 16px; border-radius: 60px; font-size: 0.85rem; border: 1px solid rgba(167,139,250,0.1); white-space:nowrap;"><i class="fas fa-clock" style="color: #6ee7b7;"></i> Запуск от 2 дней</span>
-              <span style="background: rgba(167,139,250,0.12); padding: 6px 16px; border-radius: 60px; font-size: 0.85rem; border: 1px solid rgba(167,139,250,0.1); white-space:nowrap;"><i class="fas fa-telegram" style="color: #6ee7b7;"></i> Заявки в Telegram, почту, googl таблицу</span>
-              <span style="background: rgba(167,139,250,0.12); padding: 6px 16px; border-radius: 60px; font-size: 0.85rem; border: 1px solid rgba(167,139,250,0.1); white-space:nowrap;"><i class="fas fa-headset" style="color: #6ee7b7;"></i> Техподдержка </span>
-            </div>
-            <div class="faq-grid">
-              <div class="faq-block"><h3><i class="fas fa-circle"></i> ПЕРЕД ЗАЯВКОЙ ЧАЩЕ ВСЕГО УТОЧНЯЮТ</h3><ul><li>Можно ли начать без предоплаты?</li><li>Когда я увижу демо?</li><li>Сколько будет стоить запуск?</li><li>Куда будут приходить заявки?</li></ul></div>
-              <div class="faq-block"><h3><i class="fas fa-circle"></i> Можем без предоплаты?</h3><p>Да. Сначала можно посмотреть демо, обсудить задачу и согласовать условия запуска.</p><div class="faq-highlight"><p><strong>Что я получу?</strong><br>Сайт, адаптированный под ваш бизнес, с формой заявки и понятным запуском.</p></div></div>
-              <div class="faq-block"><h3><i class="fas fa-circle"></i> Когда будет результат?</h3><p>Готовые решения можно адаптировать быстрее, обычно от 2 дней после уточнения задачи.</p></div>
-              <div class="faq-block"><h3><i class="fas fa-circle"></i> Куда приходят заявки?</h3><p>В Telegram, MAX, таблицу или другой удобный канал после настройки проекта.</p></div>
-            </div>
-            <div style="margin-top: 40px; border-top: 1px solid rgba(255,255,255,0.06); padding-top: 32px; width:100%;">
-              <h3 style="color: #a78bfa; font-size: 1.2rem; margin-bottom: 12px;"><i class="fas fa-tags"></i> Все вопросы</h3>
-              <div class="faq-questions-grid">
-                ${[1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18].map(i => `
-                  <div class="faq-question-wrapper">
-                    <button class="faq-question-btn" id="btn-${i}" onclick="toggleAnswer('${i}')">
-                      <i class="fas fa-chevron-right"></i>
-                      <span class="btn-text">${i}. ${['Сколько стоит сайт?','Почему цена указана "от"?','Можно ли начать без предоплаты?','Есть ли скрытые платежи?','Что такое готовый сайт?','Можно ли посмотреть сайт до заказа?','Демо — это мой будущий сайт один в один?','Что происходит после заявки?','Какие гарантии вы даёте?','Как быстро вы отвечаете на вопросы?','Что нужно от меня для старта?','Что если мне нужно что-то поправить?','Можно ли доработать сайт после запуска?','Есть ли поддержка после запуска?','Куда будут приходить заявки с сайта?','Можно ли подключить Telegram или таблицу?','Нужна ли политика конфиденциальности?','Где будет размещён сайт?'][i-1]}</span>
-                    </button>
-                    <div class="faq-answer" id="answer-${i}">
-                      <strong>${['Цена зависит от сложности и функционала.','Потому что каждый проект уникален.','Да, мы работаем без предоплаты.','Нет, все платежи прозрачны.','Готовый сайт — это адаптируемое решение.','Конечно!','Да, демо — это точный макет.','Чёткий алгоритм:','Мы даём гарантию на работоспособность сайта — 3 месяца.','Мы отвечаем в течение 1 часа в рабочее время.','Для старта нужно всего 3 вещи:','Мы вносим правки на всех этапах.','Да, мы всегда на связи для доработок.','Да, мы оказываем полную техническую поддержку.','Заявки приходят в выбранный вами канал.','Да, мы подключаем любые удобные каналы.','Да, для работы с формами сбора данных она обязательна.','Сайт размещается на вашем хостинге или нашем.'][i-1]}</strong><br>
-                      ${['Базовый сайт-визитка — от $490. Бизнес-решение с корзиной и CRM — от $990.','Цена "от" — это стартовая стоимость базовой версии.','Сначала мы делаем демо-версию сайта, вы её смотрите, вносите правки.','В договоре фиксируется финальная стоимость, которая не меняется.','Мы берём проверенный шаблон и настраиваем его под ваш бизнес.','Мы делаем демо-версию будущего сайта до старта разработки.','Мы делаем полноценный прототип с реальными текстами и изображениями.','1. Мы связываемся с вами в течение 1 часа. 2. Обсуждаем задачу. 3. Готовим демо-версию.','В течение этого срока мы бесплатно исправляем любые технические ошибки.','В Telegram и по почте — до 20:00 МСК.','1. Описание вашего бизнеса. 2. Пожелания по дизайну. 3. Контактные данные.','Вы можете вносить изменения на этапе демо-версии — это бесплатно.','Мы можем добавить новые разделы, модули или изменить дизайн после запуска.','Первые 3 месяца — бесплатно. Далее от $29/мес.','Мы настраиваем отправку заявок в Telegram, WhatsApp, Email или CRM.','Мы настраиваем отправку заявок в Telegram-бота, Google Таблицы или CRM.','Мы подготавливаем базовый шаблон политики конфиденциальности бесплатно.','В первом месяце хостинг бесплатный, далее — от $9/мес.'][i-1]}<br>
-                      ${i===8 ? '4. Вы вносите правки, мы дорабатываем. 5. Запускаем сайт. 6. Оплата после запуска.' : ''}
-                      ${i===11 ? 'Всё остальное мы делаем сами.' : ''}
-                      ${i===12 ? 'После запуска сайта правки оплачиваются отдельно.' : ''}
-                    </div>
-                  </div>
-                `).join('')}
-              </div>
-              <div class="faq-cta-block">
-                <h3><i class="fas fa-rocket" style="color:#6ee7b7;"></i> Готовы обсудить сайт?</h3>
-                <p>Посмотрите готовые решения или оставьте заявку — подскажем формат, срок и следующий шаг.</p>
-                <div class="btn-group-equal">
-                  <button class="btn-universal" onclick="loadPage('portfolio')"><i class="fas fa-images"></i> Посмотреть готовые сайты</button>
-                  <button class="btn-universal" onclick="window.open('tel:+79194449517', '_self')"><i class="fa fa-check" aria-hidden="true"></i> Позвонить</button>
-                  <button class="btn-universal-outline" onclick="window.open('https://max.ru/u/f9LHodD0cOJ9e7S9yrVcsL9q5uTDWlRIeYC57PqocFDzwCRfwCjr-R6qsWA', '_blank')">
-                    <img src="https://maxicons.ru/icons/MAX.svg" alt="Иконка MAX" width="32" height="32"> Написать в Мах
-                  </button>
+                <div style="text-align:center; padding:60px 0 40px; width:100%;">
+                    <h1 style="font-size:clamp(2.2rem,7vw,4.8rem); font-weight:800; line-height:1.1; background:linear-gradient(to right,#f0f4ff,#a78bfa,#6ee7b7); -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text; margin-bottom:20px; word-break:break-word;">Продаём сайты,<br />которые работают</h1>
+                    <p style="font-size:1.1rem; max-width:700px; color:#94a3b8; margin:0 auto 32px; padding:0 10px;">Готовые решения с высокой конверсией. Дизайн, скорость, SEO — всё включено.</p>
+                    <button class="btn-universal" onclick="window.location.href='tel:+79194449517'"><i class="fas fa-bolt"></i> Заказать сайт сейчас</button>
+                    <button class="btn-universal-outline" onclick="loadPage('portfolio')"><i class="fas fa-play"></i> Посмотреть демо-проекты</button>
                 </div>
-              </div>
-            </div>
-          </div>
-        `,
-
+                <div class="grid-3"></div>
+                <div style="background: radial-gradient(circle at 30% 30%, rgba(167,139,250,0.1), transparent 70%); border-radius: 40px; padding: 40px 20px; text-align: center; border: 1px solid rgba(255,255,255,0.04); width:100%;">
+                    <h2 style="font-size: clamp(1.8rem, 5vw, 2.4rem); font-weight: 700; margin-bottom: 12px;">Готов поднять продажи?</h2>
+                    <p style="color: #94a3b8; max-width: 600px; margin: 0 auto 28px; font-size: 1.05rem; padding:0 10px;">Мы создаём сайты, которые приносят прибыль. Оставь заявку — получи консультацию.</p>
+                    <div class="btn-center">
+                        <button class="btn-universal" onclick="loadPage('faq')" style="font-size:1rem; padding:14px 40px;"><i class="fas fa-paper-plane"></i> Получить предложение</button>
+                    </div>
+                </div>
+            `,
+            faq: `
+                <div class="faq-page">
+                    <h2><i class="fas fa-question-circle" style="background: none; -webkit-text-fill-color: #a78bfa; color: #a78bfa;"></i> FAQ</h2>
+                    <div class="subhead">Ответы на вопросы перед запуском сайта.</div>
+                    <div style="display: flex; flex-wrap: wrap; gap: 10px; margin-bottom: 28px; justify-content: center; width:100%;">
+                        <span style="background: rgba(167,139,250,0.12); padding: 6px 16px; border-radius: 60px; font-size: 0.85rem; border: 1px solid rgba(167,139,250,0.1); white-space:nowrap;"><i class="fas fa-hand-holding-heart" style="color: #6ee7b7;"></i> Без предоплаты</span>
+                        <span style="background: rgba(167,139,250,0.12); padding: 6px 16px; border-radius: 60px; font-size: 0.85rem; border: 1px solid rgba(167,139,250,0.1); white-space:nowrap;"><i class="fas fa-eye" style="color: #6ee7b7;"></i> Демо до оплаты</span>
+                        <span style="background: rgba(167,139,250,0.12); padding: 6px 16px; border-radius: 60px; font-size: 0.85rem; border: 1px solid rgba(167,139,250,0.1); white-space:nowrap;"><i class="fas fa-clock" style="color: #6ee7b7;"></i> Запуск от 2 дней</span>
+                        <span style="background: rgba(167,139,250,0.12); padding: 6px 16px; border-radius: 60px; font-size: 0.85rem; border: 1px solid rgba(167,139,250,0.1); white-space:nowrap;"><i class="fas fa-telegram" style="color: #6ee7b7;"></i> Заявки в Telegram, почту</span>
+                        <span style="background: rgba(167,139,250,0.12); padding: 6px 16px; border-radius: 60px; font-size: 0.85rem; border: 1px solid rgba(167,139,250,0.1); white-space:nowrap;"><i class="fas fa-headset" style="color: #6ee7b7;"></i> Техподдержка</span>
+                    </div>
+                    <div class="faq-grid">
+                        <div class="faq-block"><h3><i class="fas fa-circle"></i> ПЕРЕД ЗАЯВКОЙ ЧАЩЕ ВСЕГО УТОЧНЯЮТ</h3><ul><li>Можно ли начать без предоплаты?</li><li>Когда я увижу демо?</li><li>Сколько будет стоить запуск?</li><li>Куда будут приходить заявки?</li></ul></div>
+                        <div class="faq-block"><h3><i class="fas fa-circle"></i> Можем без предоплаты?</h3><p>Да. Сначала можно посмотреть демо, обсудить задачу и согласовать условия запуска.</p><div class="faq-highlight"><p><strong>Что я получу?</strong><br>Сайт, адаптированный под ваш бизнес, с формой заявки и понятным запуском.</p></div></div>
+                        <div class="faq-block"><h3><i class="fas fa-circle"></i> Когда будет результат?</h3><p>Готовые решения можно адаптировать быстрее, обычно от 2 дней после уточнения задачи.</p></div>
+                        <div class="faq-block"><h3><i class="fas fa-circle"></i> Куда приходят заявки?</h3><p>В Telegram, MAX, таблицу или другой удобный канал после настройки проекта.</p></div>
+                    </div>
+                    <div style="margin-top: 40px; border-top: 1px solid rgba(255,255,255,0.06); padding-top: 32px; width:100%;">
+                        <h3 style="color: #a78bfa; font-size: 1.2rem; margin-bottom: 12px;"><i class="fas fa-tags"></i> Все вопросы</h3>
+                        <div class="faq-questions-grid">
+                            ${[1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18].map(i => `
+                                <div class="faq-question-wrapper">
+                                    <button class="faq-question-btn" id="btn-${i}" onclick="toggleAnswer('${i}')">
+                                        <i class="fas fa-chevron-right"></i>
+                                        <span class="btn-text">${i}. ${['Сколько стоит сайт?','Почему цена указана "от"?','Можно ли начать без предоплаты?','Есть ли скрытые платежи?','Что такое готовый сайт?','Можно ли посмотреть сайт до заказа?','Демо — это мой будущий сайт один в один?','Что происходит после заявки?','Какие гарантии вы даёте?','Как быстро вы отвечаете на вопросы?','Что нужно от меня для старта?','Что если мне нужно что-то поправить?','Можно ли доработать сайт после запуска?','Есть ли поддержка после запуска?','Куда будут приходить заявки с сайта?','Можно ли подключить Telegram или таблицу?','Нужна ли политика конфиденциальности?','Где будет размещён сайт?'][i-1]}</span>
+                                    </button>
+                                    <div class="faq-answer" id="answer-${i}">
+                                        <strong>${['Цена зависит от сложности и функционала.','Потому что каждый проект уникален.','Да, мы работаем без предоплаты.','Нет, все платежи прозрачны.','Готовый сайт — это адаптируемое решение.','Конечно!','Да, демо — это точный макет.','Чёткий алгоритм:','Мы даём гарантию на работоспособность сайта — 3 месяца.','Мы отвечаем в течение 1 часа в рабочее время.','Для старта нужно всего 3 вещи:','Мы вносим правки на всех этапах.','Да, мы всегда на связи для доработок.','Да, мы оказываем полную техническую поддержку.','Заявки приходят в выбранный вами канал.','Да, мы подключаем любые удобные каналы.','Да, для работы с формами сбора данных она обязательна.','Сайт размещается на вашем хостинге или нашем.'][i-1]}</strong><br>
+                                        ${['Базовый сайт-визитка — от $490. Бизнес-решение с корзиной и CRM — от $990.','Цена "от" — это стартовая стоимость базовой версии.','Сначала мы делаем демо-версию сайта, вы её смотрите, вносите правки.','В договоре фиксируется финальная стоимость, которая не меняется.','Мы берём проверенный шаблон и настраиваем его под ваш бизнес.','Мы делаем демо-версию будущего сайта до старта разработки.','Мы делаем полноценный прототип с реальными текстами и изображениями.','1. Мы связываемся с вами в течение 1 часа. 2. Обсуждаем задачу. 3. Готовим демо-версию.','В течение этого срока мы бесплатно исправляем любые технические ошибки.','В Telegram и по почте — до 20:00 МСК.','1. Описание вашего бизнеса. 2. Пожелания по дизайну. 3. Контактные данные.','Вы можете вносить изменения на этапе демо-версии — это бесплатно.','Мы можем добавить новые разделы, модули или изменить дизайн после запуска.','Первые 3 месяца — бесплатно. Далее от $29/мес.','Мы настраиваем отправку заявок в Telegram, WhatsApp, Email или CRM.','Мы настраиваем отправку заявок в Telegram-бота, Google Таблицы или CRM.','Мы подготавливаем базовый шаблон политики конфиденциальности бесплатно.','В первом месяце хостинг бесплатный, далее — от $9/мес.'][i-1]}<br>
+                                        ${i===8 ? '4. Вы вносите правки, мы дорабатываем. 5. Запускаем сайт. 6. Оплата после запуска.' : ''}
+                                        ${i===11 ? 'Всё остальное мы делаем сами.' : ''}
+                                        ${i===12 ? 'После запуска сайта правки оплачиваются отдельно.' : ''}
+                                    </div>
+                                </div>
+                            `).join('')}
+                        </div>
+                        <div class="faq-cta-block">
+                            <h3><i class="fas fa-rocket" style="color:#6ee7b7;"></i> Готовы обсудить сайт?</h3>
+                            <p>Посмотрите готовые решения или оставьте заявку — подскажем формат, срок и следующий шаг.</p>
+                            <div class="btn-group-equal">
+                                <button class="btn-universal" onclick="loadPage('portfolio')"><i class="fas fa-images"></i> Посмотреть готовые сайты</button>
+                                <button class="btn-universal" onclick="window.open('tel:+79194449517', '_self')"><i class="fa fa-check" aria-hidden="true"></i> Позвонить</button>
+                                <button class="btn-universal-outline" onclick="window.open('https://max.ru/u/f9LHodD0cOJ9e7S9yrVcsL9q5uTDWlRIeYC57PqocFDzwCRfwCjr-R6qsWA', '_blank')">
+                                    <img src="https://maxicons.ru/icons/MAX.svg" alt="Иконка MAX" width="32" height="32"> Написать в Мах
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            `,
             blog: `
-          <div class="page-template">
-            <h2><i class="fas fa-newspaper"></i> Блог</h2>
-            <p class="page-desc">Честные статьи о создании сайтов, маркетинге и психологии продаж. Никакой воды — только практика.</p>
-            <div class="card-grid">
-              <div class="mini-card"><h4>Как сайт продаёт без продавца</h4><p>Психология принятия решений: почему люди покупают и как дизайн влияет на доверие.</p><div class="meta">12 мин чтения · 25 июля 2026</div></div>
-              <div class="mini-card"><h4>SEO-тексты: писать для людей или для роботов?</h4><p>Разбираем на примерах. Честный подход к контенту, который работает.</p><div class="meta">8 мин чтения · 22 июля 2026</div></div>
-              <div class="mini-card"><h4>Сколько стоит хороший сайт на самом деле?</h4><p>Разбор цен, скрытых платежей и того, за что вы платите. Без иллюзий.</p><div class="meta">10 мин чтения · 18 июля 2026</div></div>
-              <div class="mini-card"><h4>Почему 70% сайтов не приносят заявки</h4><p>Типичные ошибки и как их избежать. Всё по делу, с примерами.</p><div class="meta">15 мин чтения · 14 июля 2026</div></div>
-            </div>
-            <div class="btn-center">
-              <button class="btn-universal" onclick="loadPage('faq')"><i class="fas fa-book-open"></i> Читать все статьи</button>
-            </div>
-          </div>
-        `,
-
+                <div class="page-template">
+                    <h2><i class="fas fa-newspaper"></i> Блог</h2>
+                    <p class="page-desc">Честные статьи о создании сайтов, маркетинге и психологии продаж. Никакой воды — только практика.</p>
+                    <div class="card-grid"></div>
+                    <div class="btn-center">
+                        <button class="btn-universal" onclick="loadPage('faq')"><i class="fas fa-book-open"></i> Читать все статьи</button>
+                    </div>
+                </div>
+            `,
             portfolio: `
-          <div class="page-template">
-            <h2><i class="fas fa-briefcase"></i> Портфолио</h2>
-            <p class="page-desc">Реальные проекты, которые мы сделали для реальных бизнесов. Каждый сайт приносит заявки.</p>
-            <div class="card-grid">
-              <div class="mini-card"><h4>GreenShop — интернет-магазин</h4><p>Адаптивный сайт с корзиной и интеграцией Telegram. Конверсия +40%.</p><div class="meta">Запуск: 3 дня</div></div>
-              <div class="mini-card"><h4>LawyerPro — юридический бренд</h4><p>Сайт-визитка с автоворонкой. 25 заявок в неделю с нуля.</p><div class="meta">Запуск: 2 дня</div></div>
-              <div class="mini-card"><h4>FitnessCoach — личный тренер</h4><p>Лендинг с записью на консультацию. Окупился за 4 дня.</p><div class="meta">Запуск: 1 день</div></div>
-              <div class="mini-card"><h4>IT-студия «Код»</h4><p>Корпоративный сайт с портфолио и блогом. Заявки выросли в 2 раза.</p><div class="meta">Запуск: 5 дней</div></div>
-            </div>
-            <div class="btn-center">
-              <button class="btn-universal" onclick="window.location.href='tel:+79194449517'"><i class="fas fa-bolt"></i> Нужна консультация</button>
-            </div>
-          </div>
-        `
+                <div class="page-template">
+                    <h2><i class="fas fa-briefcase"></i> Портфолио</h2>
+                    <p class="page-desc">Реальные проекты, которые мы сделали для реальных бизнесов. Каждый сайт приносит заявки.</p>
+                    <div class="card-grid"></div>
+                    <div class="btn-center">
+                        <button class="btn-universal" onclick="window.location.href='tel:+79194449517'"><i class="fas fa-bolt"></i> Нужна консультация</button>
+                    </div>
+                </div>
+            `
         };
 
-        // ========== ЗАГРУЗКА СТРАНИЦ ==========
         function loadPage(page) {
             const content = document.getElementById('main-content');
             if (pages[page]) {
                 content.innerHTML = pages[page];
-            } else {
-                content.innerHTML = `<h2 style="color:#a78bfa;">Страница не найдена</h2><p style="color:#94a3b8;">Пожалуйста, выберите раздел из меню.</p>`;
+                document.querySelectorAll('.nav-links button[data-page]').forEach(btn => {
+                    btn.classList.toggle('active', btn.dataset.page === page);
+                });
+                if (page === 'home') {
+                    loadTariffs();
+                } else if (page === 'blog' || page === 'portfolio') {
+                    loadCardsForPage(page);
+                }
             }
-            document.querySelectorAll('.nav-links button[data-page]').forEach(btn => {
-                btn.classList.toggle('active', btn.dataset.page === page);
-            });
             document.getElementById('main-content').scrollIntoView({ behavior: 'smooth', block: 'start' });
         }
 
@@ -1333,121 +1208,6 @@
             loadPage('home');
         });
     </script>
-
-<script>
-    // ===== АДРЕС ВАШЕГО БЭКЕНДА =====
-    
-<<<<<<< HEAD
-   const API_BASE = 'https://enhancements-decreased-spelling-satisfaction.trycloudflare.com/api';
-=======
-   const API_BASE = "https://mom-solomon-sir-homepage.trycloudflare.com/api";
->>>>>>> f2772cd (Update index.html)
-
-    // ===== ЗАГРУЗКА ТАРИФОВ =====
-   let tariffsLoaded = false;
-
-async function loadTariffs() {
-    // Если уже загружены - не загружаем снова
-    if (tariffsLoaded) return;
-    
-    try {
-        const res = await fetch(API_BASE + '/tariffs');
-        if (!res.ok) throw new Error('Ошибка загрузки тарифов');
-        const tariffs = await res.json();
-        
-        const grid = document.querySelector('.grid-3');
-        if (!grid) return;
-        
-        if (tariffs.length === 0) {
-            grid.innerHTML = '<p style="color: #94a3b8; text-align: center; width: 100%;">Нет тарифов. Добавьте их в админке.</p>';
-            return;
-        }
-
-        grid.innerHTML = tariffs.map(t => `
-            <div class="card">
-                <i class="fas fa-infinity"></i>
-                <h3>${t.name}</h3>
-                <p>${t.description || 'Полный цикл разработки'}</p>
-                <div class="price">от ${t.price} р<small>/ сайт</small></div>
-                <div class="btn-center">
-                    <button class="btn-universal" onclick="openModal('${t.name}')">
-                        <i class="fas fa-shopping-cart"></i> Подробнее
-                    </button>
-                </div>
-            </div>
-        `).join('');
-        
-        tariffsLoaded = true;
-        
-        // Обновляем данные для модальных окон
-        window.tariffData = {};
-        tariffs.forEach(t => {
-            window.tariffData[t.name] = {
-                price: t.price,
-                services: t.services || []
-            };
-        });
-    } catch (err) {
-        console.error('Ошибка загрузки тарифов:', err);
-        const grid = document.querySelector('.grid-3');
-        if (grid) grid.innerHTML = '<p style="color: #ff6b6b; text-align: center; width: 100%;">Не удалось загрузить тарифы. Проверьте подключение к бэкенду.</p>';
-    }
-}
-    // ===== ЗАГРУЗКА КАРТОЧЕК =====
-    async function loadCardsForPage(page) {
-        try {
-            const res = await fetch(API_BASE + '/cards');
-            if (!res.ok) throw new Error('Ошибка загрузки карточек');
-            const cards = await res.json();
-            
-            const type = page === 'portfolio' ? 'portfolio' : 'blog';
-            const filtered = cards.filter(c => c.type === type);
-            
-            const container = document.querySelector('#main-content .card-grid');
-            if (!container) return;
-            
-            if (filtered.length === 0) {
-                container.innerHTML = '<p style="color: #94a3b8; text-align: center; width: 100%;">Нет карточек. Добавьте их в админке.</p>';
-                return;
-            }
-
-            container.innerHTML = filtered.map(c => `
-                <div class="mini-card">
-                    <h4>${c.title}</h4>
-                    <p>${c.description || ''}</p>
-                    <div class="meta">${c.meta || ''}</div>
-                </div>
-            `).join('');
-        } catch (err) {
-            console.error('Ошибка загрузки карточек:', err);
-            const container = document.querySelector('#main-content .card-grid');
-            if (container) container.innerHTML = '<p style="color: #ff6b6b; text-align: center; width: 100%;">Не удалось загрузить карточки. Проверьте подключение к бэкенду.</p>';
-        }
-    }
-
-    // ===== ПЕРЕОПРЕДЕЛЯЕМ loadPage =====
-    const originalLoadPage = loadPage;
-    loadPage = function(page) {
-        originalLoadPage(page);
-        
-        // После вставки HTML загружаем данные
-        if (page === 'home') {
-            loadTariffs();
-        } else if (page === 'portfolio' || page === 'blog') {
-            loadCardsForPage(page);
-        }
-    };
-
-    // ===== ПРИ ПЕРВОЙ ЗАГРУЗКЕ СТРАНИЦЫ =====
-    document.addEventListener('DOMContentLoaded', () => {
-        // Вызываем оригинальную loadPage('home') уже есть, но мы переопределили её,
-        // поэтому она сама подгрузит данные.
-        // Но если страница уже загружена, инициализируем загрузку данных.
-        if (document.querySelector('.grid-3')) {
-            loadTariffs();
-        }
-    });
-</script>
-
 </body>
 </html>
+
