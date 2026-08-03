@@ -1,5 +1,3 @@
-cd /tmp/web00
-cat > admin-panel.html << 'EOF'
 <!DOCTYPE html>
 <html lang="ru">
 <head>
@@ -402,7 +400,7 @@ async function loadTariffs() {
                 <p style="color: #6ee7b7; font-size: 20px; font-weight: 700;">${t.price} ₽</p>
                 <p style="color: #94a3b8; font-size: 14px;">${t.description || ''}</p>
                 <div style="margin: 8px 0;">
-                    ${t.services.map(s => `<span class="service-tag">${s}</span>`).join('')}
+                    ${t.services ? t.services.map(s => `<span class="service-tag">${s}</span>`).join('') : ''}
                 </div>
                 <div class="meta">Создан: ${new Date(t.createdAt).toLocaleDateString()}</div>
                 <div class="actions">
@@ -516,7 +514,7 @@ async function editTariff(id) {
         document.getElementById('tariffName').value = tariff.name;
         document.getElementById('tariffPrice').value = tariff.price;
         document.getElementById('tariffDescription').value = tariff.description || '';
-        document.getElementById('tariffServices').value = tariff.services.join('\n');
+        document.getElementById('tariffServices').value = tariff.services ? tariff.services.join('\n') : '';
         document.getElementById('tariffOrder').value = tariff.order || 0;
     } catch (error) {
         showNotification('Ошибка загрузки тарифа', 'error');
@@ -569,7 +567,8 @@ async function saveForm() {
     if (type === 'tariff') {
         const services = document.getElementById('tariffServices').value
             .split('\n')
-            .filter(s => s.trim());
+            .map(s => s.trim())
+            .filter(s => s.length > 0);
         
         data = {
             name: document.getElementById('tariffName').value,
@@ -689,20 +688,14 @@ function showNotification(message, type = 'success') {
 // ============================================
 // ПРОВЕРКА АВТОРИЗАЦИИ ПРИ ЗАГРУЗКЕ
 // ============================================
-console.log('🔍 Проверка авторизации...');
-console.log('Токен:', token ? 'есть' : 'нет');
-
 if (token) {
-    console.log('✅ Токен найден, показываем админку');
     document.getElementById('loginForm').style.display = 'none';
     document.getElementById('adminPanel').style.display = 'block';
     document.getElementById('logoutBtn').style.display = 'inline-block';
     loadData();
 } else {
-    console.log('❌ Токена нет, показываем форму входа');
     document.getElementById('loginForm').style.display = 'block';
 }
 </script>
 </body>
 </html>
-
