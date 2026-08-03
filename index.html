@@ -562,9 +562,7 @@
             font-size: 0.95rem;
             color: #cbd5e1;
         }
-        .service-list li:last-child {
-            border-bottom: none;
-        }
+        .service-list li:last-child { border-bottom: none; }
         .service-list li i {
             color: #6ee7b7;
             font-size: 0.9rem;
@@ -599,9 +597,7 @@
             background: rgba(167,139,250,0.08);
             box-shadow: 0 0 0 3px rgba(167,139,250,0.15);
         }
-        .form-group input::placeholder {
-            color: #64748b;
-        }
+        .form-group input::placeholder { color: #64748b; }
         .modal .btn-universal {
             width: 100%;
             min-width: unset;
@@ -734,6 +730,8 @@
             </div>
         </footer>
     </div>
+    
+    <!-- Модальное окно -->
     <div class="modal-overlay" id="tariffModal">
         <div class="modal">
             <div class="modal-header">
@@ -760,6 +758,8 @@
             </form>
         </div>
     </div>
+    
+    <!-- Уведомление -->
     <div class="heart-notification" id="heartNotification">
         <span class="heart-icon">❤️</span>
         <h3>Спасибо!</h3>
@@ -770,7 +770,7 @@
     <script>
         const API_BASE = 'https://enhancements-decreased-spelling-satisfaction.trycloudflare.com/api';
         
-        // Элементы модального окна
+        // ========== ЭЛЕМЕНТЫ МОДАЛЬНОГО ОКНА ==========
         const modalOverlay = document.getElementById('tariffModal');
         const modalTariffName = document.getElementById('modalTariffName');
         const modalPriceDisplay = document.getElementById('modalPriceDisplay');
@@ -816,16 +816,6 @@
                     li.innerHTML = '<i class="fas fa-check-circle"></i> Услуги не указаны';
                     serviceListEl.appendChild(li);
                 }
-                
-                // Обновляем глобальные данные
-                window.tariffData = {};
-                tariffs.forEach(t => {
-                    window.tariffData[t.name] = {
-                        price: t.price,
-                        services: t.services || []
-                    };
-                });
-                
             } catch (err) {
                 console.error('Ошибка загрузки тарифа:', err);
                 modalTariffName.textContent = 'Ошибка';
@@ -883,10 +873,7 @@
         }
 
         // ========== ЗАГРУЗКА ТАРИФОВ ==========
-        let tariffsLoaded = false;
-
         async function loadTariffs() {
-            if (tariffsLoaded) return;
             try {
                 const res = await fetch(API_BASE + '/tariffs');
                 if (!res.ok) throw new Error('Ошибка загрузки тарифов');
@@ -898,15 +885,6 @@
                     grid.innerHTML = '<p style="color: #94a3b8; text-align: center; width: 100%;">Нет тарифов. Добавьте их в админке.</p>';
                     return;
                 }
-                
-                // Сохраняем данные для модального окна
-                window.tariffData = {};
-                tariffs.forEach(t => {
-                    window.tariffData[t.name] = {
-                        price: t.price,
-                        services: t.services || []
-                    };
-                });
                 
                 grid.innerHTML = tariffs.map(t => `
                     <div class="card">
@@ -921,7 +899,6 @@
                         </div>
                     </div>
                 `).join('');
-                tariffsLoaded = true;
             } catch (err) {
                 console.error('Ошибка загрузки тарифов:', err);
                 const grid = document.querySelector('.grid-3');
@@ -977,7 +954,7 @@
             `,
             faq: `
                 <div class="faq-page">
-                    <h2><i class="fas fa-question-circle" style="background: none; -webkit-text-fill-color: #a78bfa; color: #a78bfa;"></i> FAQ</h2>
+                    <h2><i class="fas fa-question-circle"></i> FAQ</h2>
                     <div class="subhead">Ответы на вопросы перед запуском сайта.</div>
                     <div style="display: flex; flex-wrap: wrap; gap: 10px; margin-bottom: 28px; justify-content: center; width:100%;">
                         <span style="background: rgba(167,139,250,0.12); padding: 6px 16px; border-radius: 60px; font-size: 0.85rem; border: 1px solid rgba(167,139,250,0.1); white-space:nowrap;"><i class="fas fa-hand-holding-heart" style="color: #6ee7b7;"></i> Без предоплаты</span>

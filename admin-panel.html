@@ -325,15 +325,9 @@
 </div>
 
 <script>
-// ============================================
-// КОНФИГУРАЦИЯ
-// ============================================
 const API_BASE = 'https://enhancements-decreased-spelling-satisfaction.trycloudflare.com/api';
 let token = localStorage.getItem('token');
 
-// ============================================
-// ФУНКЦИИ ВХОДА/ВЫХОДА
-// ============================================
 async function login() {
     const username = document.getElementById('loginUsername').value;
     const password = document.getElementById('loginPassword').value;
@@ -374,9 +368,6 @@ function logout() {
     document.getElementById('logoutBtn').style.display = 'none';
 }
 
-// ============================================
-// ЗАГРУЗКА ДАННЫХ
-// ============================================
 async function loadData() {
     await loadTariffs();
     await loadCards('blog');
@@ -404,12 +395,8 @@ async function loadTariffs() {
                 </div>
                 <div class="meta">Создан: ${new Date(t.createdAt).toLocaleDateString()}</div>
                 <div class="actions">
-                    <button class="btn-edit" onclick="editTariff('${t._id}')">
-                        <i class="fas fa-edit"></i> Редактировать
-                    </button>
-                    <button class="btn-delete" onclick="deleteTariff('${t._id}')">
-                        <i class="fas fa-trash"></i> Удалить
-                    </button>
+                    <button class="btn-edit" onclick="editTariff('${t._id}')"><i class="fas fa-edit"></i> Редактировать</button>
+                    <button class="btn-delete" onclick="deleteTariff('${t._id}')"><i class="fas fa-trash"></i> Удалить</button>
                 </div>
             </div>
         `).join('');
@@ -438,12 +425,8 @@ async function loadCards(type) {
                 <p style="color: #94a3b8; font-size: 14px;">${c.description || ''}</p>
                 <div class="meta">${c.meta || ''}</div>
                 <div class="actions">
-                    <button class="btn-edit" onclick="editCard('${c._id}')">
-                        <i class="fas fa-edit"></i> Редактировать
-                    </button>
-                    <button class="btn-delete" onclick="deleteCard('${c._id}')">
-                        <i class="fas fa-trash"></i> Удалить
-                    </button>
+                    <button class="btn-edit" onclick="editCard('${c._id}')"><i class="fas fa-edit"></i> Редактировать</button>
+                    <button class="btn-delete" onclick="deleteCard('${c._id}')"><i class="fas fa-trash"></i> Удалить</button>
                 </div>
             </div>
         `).join('');
@@ -453,20 +436,13 @@ async function loadCards(type) {
     }
 }
 
-// ============================================
-// ВКЛАДКИ
-// ============================================
 function switchTab(tab) {
     document.querySelectorAll('.tabs button').forEach(b => b.classList.remove('active'));
     document.querySelector(`.tabs button[data-tab="${tab}"]`).classList.add('active');
-    
     document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
     document.getElementById(`tab-${tab}`).classList.add('active');
 }
 
-// ============================================
-// МОДАЛЬНОЕ ОКНО
-// ============================================
 function openModal(type, cardType = null) {
     document.getElementById('modal').classList.add('active');
     document.getElementById('editId').value = '';
@@ -543,19 +519,10 @@ async function editCard(id) {
     }
 }
 
-// ============================================
-// СОХРАНЕНИЕ ФОРМЫ
-// ============================================
 async function saveForm() {
-    console.log('✅ saveForm() вызвана!');
-    
     const editId = document.getElementById('editId').value;
     const type = document.getElementById('editType').value;
     const token = localStorage.getItem('token');
-    
-    console.log('editId:', editId);
-    console.log('type:', type);
-    console.log('token:', token ? 'есть' : 'нет');
     
     if (!token) {
         showNotification('❌ Требуется авторизация. Войдите заново.', 'error');
@@ -596,8 +563,6 @@ async function saveForm() {
         if (editId) url += `/${editId}`;
     }
     
-    console.log('📤 Отправка:', { url, method, data });
-    
     try {
         const response = await fetch(url, {
             method: method,
@@ -608,38 +573,28 @@ async function saveForm() {
             body: JSON.stringify(data)
         });
         
-        console.log('📥 Ответ статус:', response.status);
-        
         if (response.ok) {
-            const result = await response.json();
-            console.log('✅ Успешно сохранено:', result);
             closeModal();
             showNotification('✅ Сохранено успешно!', 'success');
             loadData();
         } else {
             const error = await response.json();
-            console.error('❌ Ошибка:', error);
             showNotification('❌ Ошибка: ' + (error.error || 'Неизвестная ошибка'), 'error');
         }
     } catch (error) {
-        console.error('❌ Ошибка соединения:', error);
         showNotification('❌ Ошибка соединения с сервером', 'error');
+        console.error('Ошибка:', error);
     }
 }
 
-// ============================================
-// УДАЛЕНИЕ
-// ============================================
 async function deleteTariff(id) {
     if (!confirm('Удалить тариф?')) return;
-    
     try {
         const token = localStorage.getItem('token');
         const response = await fetch(`${API_BASE}/tariffs/${id}`, {
             method: 'DELETE',
             headers: { 'Authorization': `Bearer ${token}` }
         });
-        
         if (response.ok) {
             showNotification('✅ Тариф удалён', 'success');
             loadTariffs();
@@ -653,14 +608,12 @@ async function deleteTariff(id) {
 
 async function deleteCard(id) {
     if (!confirm('Удалить запись?')) return;
-    
     try {
         const token = localStorage.getItem('token');
         const response = await fetch(`${API_BASE}/cards/${id}`, {
             method: 'DELETE',
             headers: { 'Authorization': `Bearer ${token}` }
         });
-        
         if (response.ok) {
             showNotification('✅ Запись удалена', 'success');
             loadData();
@@ -672,29 +625,18 @@ async function deleteCard(id) {
     }
 }
 
-// ============================================
-// УВЕДОМЛЕНИЯ
-// ============================================
 function showNotification(message, type = 'success') {
     const notification = document.getElementById('notification');
     notification.className = `notification ${type}`;
     notification.textContent = (type === 'success' ? '✅ ' : '❌ ') + message;
-    
-    setTimeout(() => {
-        notification.className = 'notification';
-    }, 5000);
+    setTimeout(() => { notification.className = 'notification'; }, 5000);
 }
 
-// ============================================
-// ПРОВЕРКА АВТОРИЗАЦИИ ПРИ ЗАГРУЗКЕ
-// ============================================
 if (token) {
     document.getElementById('loginForm').style.display = 'none';
     document.getElementById('adminPanel').style.display = 'block';
     document.getElementById('logoutBtn').style.display = 'inline-block';
     loadData();
-} else {
-    document.getElementById('loginForm').style.display = 'block';
 }
 </script>
 </body>
